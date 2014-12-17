@@ -1,26 +1,18 @@
 package com.ralitski.art.core;
 
-import java.io.File;
-import java.io.IOException;
+import com.ralitski.art.core.gui.Gui;
 
 public class Main {
 	
+	/*
+	 * TODO:
+	 * -create a ClassLoader that can drop old artists
+	 */
+	
 	public static void main(String[] args) {
-		File f = new File("./code/");
-		try {
-			Extractor.extract("./art.jar", "com/ralitski/art/test", f.getPath());
-		} catch (IOException e) {
-			System.err.println("Unable to extract artists from jar");
-			e.printStackTrace();
-		}
-		if(f.exists() && f.isDirectory()) {
-			for(Class<?> c : ClassLoader.loadClasses(f)) {
-				createArt(c);
-			}
-		} else {
-			f.mkdirs();
-			System.out.println("Code directory created.");
-		}
+		Gui g = new Gui();
+		g.setup();
+		g.start();
 	}
 	
 	public static void createArt(Class<?> c) {

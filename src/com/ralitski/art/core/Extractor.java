@@ -10,8 +10,11 @@ import java.util.jar.JarFile;
 
 public class Extractor {
 	
-	public static void extract(String jar, String src, String dest) throws IOException {
-//		src = src.replaceAll("\\.", "/");
+	public static void extractJar() throws IOException {
+		extractJar(Settings.JAR, Settings.IN_JAR, Settings.CODE_PATH);
+	}
+	
+	static void extractJar(String jar, String src, String dest) throws IOException {
 		JarFile file = new JarFile(jar);
 		Enumeration<JarEntry> entries = file.entries();
 		while(entries.hasMoreElements()) {
@@ -21,7 +24,6 @@ public class Extractor {
 				InputStream in = file.getInputStream(e);
 				File f = new File(dest + "/" + e.getName());
 				f.getParentFile().mkdirs();
-//				f.delete();
 				f.createNewFile();
 				FileOutputStream out = new FileOutputStream(f);
 				while(in.available() > 0) {
@@ -39,4 +41,17 @@ public class Extractor {
 		}
 		file.close();
 	}
+	
+	//currently unnecessary
+//	public static void extract(String src, String dest) throws IOException {
+//		File file = new File(src);
+//		if(file.exists() && file.isDirectory()) {
+//			for(File f : file.listFiles()) {
+//				if(f.getName().endsWith(".class")) {
+//					File fDest = new File(dest + File.separator + f.getName());
+//					//copy
+//				}
+//			}
+//		}
+//	}
 }

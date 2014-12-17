@@ -12,7 +12,7 @@ import com.ralitski.art.api.Artist;
 import com.ralitski.art.api.PixelArtist;
 
 
-public class ArtManager {
+public class ArtManager implements Cloneable {
 	
 	private Class<?> artClass;
 	private Artist artist;
@@ -89,6 +89,15 @@ public class ArtManager {
     
     public Image getImage() {
     	return image;
+    }
+    
+    public ArtManager clone() {
+    	try {
+			return new ArtManager(artClass);
+		} catch (Exception e) {
+			//wont happen
+			return null;
+		}
     }
     
     //statik
