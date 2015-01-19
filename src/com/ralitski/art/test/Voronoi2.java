@@ -14,6 +14,7 @@ import com.ralitski.art.api.Distance;
 import com.ralitski.art.api.Point2d;
 import com.ralitski.art.core.Settings;
 
+//TODO: cleanup and use settings
 public class Voronoi2 implements Artist {
 
 	private static final int NODES = 10;
@@ -22,13 +23,13 @@ public class Voronoi2 implements Artist {
 	private static final int MIN_COLOR = 150;
 
 	@Override
-	public int getWidth() {
-		return 1000;
+	public int getWidth(Settings settings) {
+		return settings.getInt("width", 500);
 	}
 
 	@Override
-	public int getHeight() {
-		return getWidth();
+	public int getHeight(Settings settings) {
+		return settings.getInt("height", 500);
 	}
 
 	@Override
@@ -36,8 +37,8 @@ public class Voronoi2 implements Artist {
 		Random random = new Random();
 		List<Node> nodes = new LinkedList<>();
 		Map<Node, List<Point2d>> sections = new HashMap<>();
-		float w = getWidth();
-		float h = getHeight();
+		float w = getWidth(settings);
+		float h = getHeight(settings);
 		for(int i = 0; i < NODES + random.nextInt(R_NODES); i++) {
 			Node n = new Node(random.nextFloat() * w, random.nextFloat() * h);
 			n.setColor(random);
@@ -45,8 +46,8 @@ public class Voronoi2 implements Artist {
 			sections.put(n, new LinkedList<Point2d>());
 		}
 		Distance d = Distance.TAXICAB;
-		for(int x = 0; x < getWidth(); x++) {
-			for(int y = 0; y < getHeight(); y++) {
+		for(int x = 0; x < w; x++) {
+			for(int y = 0; y < h; y++) {
 				Point2d p = new Point2d(x, y);
 				Node min = null;
 				float minDist = Float.MAX_VALUE;
@@ -72,7 +73,7 @@ public class Voronoi2 implements Artist {
 				c = new Color(red, green, blue);
 				int x = (int)p.getX();
 				int y = (int)p.getY();
-				canvas.setColorNoAlpha(x, y, c);
+				canvas.setColor(x, y, c);
 			}
 		}
 	}

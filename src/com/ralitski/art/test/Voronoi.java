@@ -14,6 +14,7 @@ import com.ralitski.art.api.Distance;
 import com.ralitski.art.api.Point2d;
 import com.ralitski.art.core.Settings;
 
+//TODO: cleanup and use settings
 public class Voronoi implements Artist {
 
 	private static final int NODES = 7;
@@ -22,29 +23,29 @@ public class Voronoi implements Artist {
 	private static final int MIN_COLOR = 80;
 
 	@Override
-	public int getWidth() {
-		return 500;
+	public int getWidth(Settings settings) {
+		return settings.getInt("width", 500);
 	}
 
 	@Override
-	public int getHeight() {
-		return getWidth();
+	public int getHeight(Settings settings) {
+		return settings.getInt("height", 500);
 	}
 
 	@Override
 	public void draw(ArtCanvas canvas, Settings settings) {
 		Random random = new Random();
 		List<Node> nodes = new LinkedList<>();
-		float w = getWidth();
-		float h = getHeight();
+		float w = getWidth(settings);
+		float h = getHeight(settings);
 		for(int i = 0; i < NODES + random.nextInt(R_NODES); i++) {
 			Node n = new Node(random.nextFloat() * w, random.nextFloat() * h);
 			n.setColor(random);
 			nodes.add(n);
 		}
 		Distance d = Distance.WONKY;
-		for(int x = 0; x < getWidth(); x++) {
-			for(int y = 0; y < getHeight(); y++) {
+		for(int x = 0; x < w; x++) {
+			for(int y = 0; y < h; y++) {
 				Point2d p = new Point2d(x, y);
 				Node min = null;
 				float minDist = Float.MAX_VALUE;
@@ -55,7 +56,7 @@ public class Voronoi implements Artist {
 						minDist = dist;
 					}
 				}
-				canvas.setColorNoAlpha(x, y, min.color);
+				canvas.setColor(x, y, min.color);
 			}
 		}
 	}

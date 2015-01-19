@@ -43,7 +43,7 @@ public class ArtManager implements Cloneable {
 	public boolean setup() {
 		if(artist == null) throw new IllegalStateException("Art requires an Artist");
 		ArtCanvas canvas = new ArtCanvas(artist);
-		Settings s = controller.getSettings().getSubSettings(getName());
+		Settings s = getSettings();
 		artist.draw(canvas, s);
 		image = canvas.getImage();
 		
@@ -58,7 +58,7 @@ public class ArtManager implements Cloneable {
 		}
 		
 		frame = new FrameManager(this);
-		frame.setup();
+		frame.setup(s);
 		running = true;
 		return setup = true;
 	}
@@ -90,6 +90,10 @@ public class ArtManager implements Cloneable {
     
     public Artist getArtist() {
     	return artist;
+    }
+    
+    public Settings getSettings() {
+    	return controller.getSettings().getSubSettings(getName());
     }
     
     public Image getImage() {

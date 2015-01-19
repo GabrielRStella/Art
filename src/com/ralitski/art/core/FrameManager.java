@@ -26,7 +26,7 @@ public class FrameManager implements WindowListener {
 		this.manager = manager;
 	}
 	
-	public void setup() {
+	public void setup(Settings settings) {
 		//for width and height
         Artist a = manager.getArtist();
 
@@ -40,8 +40,8 @@ public class FrameManager implements WindowListener {
         Insets insets = frame.getInsets();
         //adjustment constant, idk why it's necessary (but it is)
         int cons = 2;
-        int width = a.getWidth() + insets.left - cons;
-        int height = a.getHeight() + insets.top - cons;
+        int width = a.getWidth(settings) + insets.left - cons;
+        int height = a.getHeight(settings) + insets.top - cons;
         frame.setSize(width, height);
         frame.setResizable(false);
         

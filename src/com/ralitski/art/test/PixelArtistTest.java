@@ -7,19 +7,19 @@ public class PixelArtistTest implements PixelArtist {
 	public PixelArtistTest() {}
 
 	@Override
-	public int getWidth() {
-		return 255;
+	public int getWidth(Settings settings) {
+		return settings.getInt("width", 255);
 	}
 
 	@Override
-	public int getHeight() {
-		return getWidth();
+	public int getHeight(Settings settings) {
+		return settings.getInt("height", 255);
 	}
 
 	@Override
 	public int getColor(int x, int y, Settings settings) {
 		int z = x * y;
-		return x + (y << 8) + (z << 16);
+		return (x + (y << 8) + (z << 16)) | 0xFF000000; //correct alpha
 	}
 
 }

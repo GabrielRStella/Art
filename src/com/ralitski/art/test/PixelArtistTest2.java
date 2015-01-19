@@ -7,13 +7,13 @@ public class PixelArtistTest2 implements PixelArtist {
 	public PixelArtistTest2() {}
 
 	@Override
-	public int getWidth() {
-		return 255;
+	public int getWidth(Settings settings) {
+		return settings.getInt("width", 255);
 	}
 
 	@Override
-	public int getHeight() {
-		return getWidth();
+	public int getHeight(Settings settings) {
+		return settings.getInt("height", 255);
 	}
 
 	@Override
@@ -27,7 +27,7 @@ public class PixelArtistTest2 implements PixelArtist {
 		x /= f;
 		y /= f;
 		float z = x * y * f;
-		return (int)x + ((int)y << 8) + ((int)z << 16);
+		return ((int)x + ((int)y << 8) + ((int)z << 16)) | 0xFF000000; //correct alpha
 	}
 
 }

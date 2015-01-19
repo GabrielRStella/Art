@@ -21,6 +21,7 @@ public class Extractor {
 		Settings s = controller.getSettings();
 		jarPath = s.get("JAR_PATH", "./art.jar");
 		pathInJar = s.get("PATH_IN_JAR", "com/ralitski/art/test");
+		codePath = s.get("CODE_PATH", "./code/");
 	}
 	
 	public void extractJar() {

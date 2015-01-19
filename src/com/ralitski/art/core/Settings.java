@@ -42,6 +42,35 @@ public class Settings {
 		return values.put(key, value);
 	}
 	
+	public int getInt(String key) {
+		try {
+			return Integer.parseInt(get(key));
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			return 0;
+		}
+	}
+	
+	public int getInt(String key, int defaultValue) {
+		String raw = get(key, ""+defaultValue);
+		try {
+			return Integer.parseInt(raw);
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			set(key, ""+defaultValue);
+			return defaultValue;
+		}
+	}
+	
+	public int setInt(String key, int value) {
+		try {
+			return Integer.parseInt(set(key, ""+value));
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			return 0;
+		}
+	}
+	
 	public void save() {
 		try {
 			save(PATH);

@@ -31,7 +31,7 @@ public class Controller {
 		settings.load();
 		this.gui = new Gui(this);
 		extractor = new Extractor(this);
-		this.loader = new ArtClassLoader(new File(settings.get("CODE_PATH", "./code/")));
+		this.loader = new ArtClassLoader(new File(settings.get("CODE_PATH")));
 	}
 	
 	public Settings getSettings() {
