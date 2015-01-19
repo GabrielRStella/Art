@@ -12,6 +12,7 @@ import com.ralitski.art.api.ArtCanvas;
 import com.ralitski.art.api.Artist;
 import com.ralitski.art.api.Distance;
 import com.ralitski.art.api.Point2d;
+import com.ralitski.art.core.Settings;
 
 public class Voronoi implements Artist {
 
@@ -31,7 +32,7 @@ public class Voronoi implements Artist {
 	}
 
 	@Override
-	public void draw(ArtCanvas canvas) {
+	public void draw(ArtCanvas canvas, Settings settings) {
 		Random random = new Random();
 		List<Node> nodes = new LinkedList<>();
 		float w = getWidth();
@@ -54,7 +55,7 @@ public class Voronoi implements Artist {
 						minDist = dist;
 					}
 				}
-				canvas.setColor(x, y, min.color);
+				canvas.setColorNoAlpha(x, y, min.color);
 			}
 		}
 	}

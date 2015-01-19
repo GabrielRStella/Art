@@ -15,6 +15,15 @@ public class ArtCanvas {
 	
 	public ArtCanvas(int width, int height) {
 		image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		//fill the alpha
+		WritableRaster raster = image.getAlphaRaster();
+		if(raster != null) {
+			for(int x = 0; x < width; x++) {
+				for(int y = 0; y < height; y++) {
+					raster.setSample(x, y, 0, 255);
+				}
+			}
+		}
 	}
 	
 	public BufferedImage getImage() {
@@ -44,5 +53,9 @@ public class ArtCanvas {
 	public void setColor(int x, int y, Color color) {
 		setColor(x, y, color.getRGB());
 		setAlpha(x, y, color.getAlpha());
+	}
+	
+	public void setColorNoAlpha(int x, int y, Color color) {
+		setColor(x, y, color.getRGB());
 	}
 }

@@ -1,7 +1,5 @@
 package com.ralitski.art.core;
 
-import java.awt.image.WritableRaster;
-
 import com.ralitski.art.api.ArtCanvas;
 import com.ralitski.art.api.Artist;
 import com.ralitski.art.api.PixelArtist;
@@ -25,15 +23,11 @@ public class PixelArtistFeed implements Artist {
 	}
 
 	@Override
-	public void draw(ArtCanvas canvas) {
-		WritableRaster alpha = canvas.getImage().getAlphaRaster();
+	public void draw(ArtCanvas canvas, Settings settings) {
 		for(int x = 0; x < getWidth(); x++) {
 			for(int y = 0; y < getHeight(); y++) {
-				int c = internal.getColor(x, y);
+				int c = internal.getColor(x, y, settings);
 				canvas.setColor(x, y, c);
-				if(alpha != null) {
-					alpha.setSample(x, y, 0, 255);
-				}
 			}
 		}
 	}

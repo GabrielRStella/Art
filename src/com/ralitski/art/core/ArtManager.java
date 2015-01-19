@@ -14,6 +14,8 @@ import com.ralitski.art.api.PixelArtist;
 
 public class ArtManager implements Cloneable {
 	
+	private Controller controller;
+	
 	private Class<?> artClass;
 	private Artist artist;
 	BufferedImage image;
@@ -25,7 +27,8 @@ public class ArtManager implements Cloneable {
 
     //TODO: produce the art and stuff
 	
-	public ArtManager(Class<?> c) throws Exception {
+	public ArtManager(Controller controller, Class<?> c) throws Exception {
+		this.controller = controller;
 		this.artClass = c;
 		try {
 			Object o = c.newInstance();
@@ -40,7 +43,8 @@ public class ArtManager implements Cloneable {
 	public boolean setup() {
 		if(artist == null) throw new IllegalStateException("Art requires an Artist");
 		ArtCanvas canvas = new ArtCanvas(artist);
-		artist.draw(canvas);
+		Settings s = controller.getSettings().getSubSettings(getName());
+		artist.draw(canvas, s);
 		image = canvas.getImage();
 		
 		try {
@@ -65,6 +69,7 @@ public class ArtManager implements Cloneable {
 
     public void start() {
         if(!setup) return;
+        artClass = null; //allow new art to be generated
         while (running && frame.running()) {
         	//uh...
         }
@@ -91,15 +96,6 @@ public class ArtManager implements Cloneable {
     	return image;
     }
     
-    public ArtManager clone() {
-    	try {
-			return new ArtManager(artClass);
-		} catch (Exception e) {
-			//wont happen
-			return null;
-		}
-    }
-    
     //statik
     
     private static Artist getArtist(Object o) {
@@ -111,4 +107,28 @@ public class ArtManager implements Cloneable {
     		return null;
     	}
     }
+	
+	public static void createArt(Controller controller, Class<?> c) {
+		try {
+			final ArtManager manager = new ArtManager(controller, c);
+			if(manager.getArtist() != null) {
+				System.out.println("Loading art: " + manager.getName());
+				manager.setup();
+				System.out.println("Loaded art: " + manager.getName());
+				Thread t = new Thread(new Runnable() {
+					@Override
+					public void run() {
+						manager.start();
+					}
+				});
+				t.start();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static boolean isArtist(Class<?> c) {
+		return Artist.class.isAssignableFrom(c) || PixelArtist.class.isAssignableFrom(c);
+	}
 }

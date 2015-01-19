@@ -1,5 +1,6 @@
 package com.ralitski.art.test;
 import com.ralitski.art.api.PixelArtist;
+import com.ralitski.art.core.Settings;
 
 public class PixelArtistTest2 implements PixelArtist {
 	
@@ -16,7 +17,7 @@ public class PixelArtistTest2 implements PixelArtist {
 	}
 
 	@Override
-	public int getColor(int i, int j) {
+	public int getColor(int i, int j, Settings settings) {
 		int off = 255;
 		i -= off;
 		j -= off;

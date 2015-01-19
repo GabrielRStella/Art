@@ -10,11 +10,28 @@ import java.util.jar.JarFile;
 
 public class Extractor {
 	
-	public static void extractJar() throws IOException {
-		extractJar(Settings.JAR, Settings.IN_JAR, Settings.CODE_PATH);
+//	private Controller controller;
+	
+	private String jarPath;
+	private String pathInJar;
+	private String codePath;
+	
+	public Extractor(Controller controller) {
+//		this.controller = controller;
+		Settings s = controller.getSettings();
+		jarPath = s.get("JAR_PATH", "./art.jar");
+		pathInJar = s.get("PATH_IN_JAR", "com/ralitski/art/test");
 	}
 	
-	static void extractJar(String jar, String src, String dest) throws IOException {
+	public void extractJar() {
+		try {
+			extractJar(jarPath, pathInJar, codePath);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void extractJar(String jar, String src, String dest) throws IOException {
 		JarFile file = new JarFile(jar);
 		Enumeration<JarEntry> entries = file.entries();
 		while(entries.hasMoreElements()) {

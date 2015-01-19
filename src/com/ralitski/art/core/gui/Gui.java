@@ -3,19 +3,21 @@ package com.ralitski.art.core.gui;
 import java.awt.Button;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Label;
 import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.swing.BoxLayout;
 
+import com.ralitski.art.api.Artist;
 import com.ralitski.art.core.ArtManager;
-import com.ralitski.art.core.ArtistBank;
-import com.ralitski.art.core.CodeBank;
+import com.ralitski.art.core.Controller;
 import com.ralitski.art.core.Extractor;
 import com.ralitski.art.core.Settings;
 
@@ -25,8 +27,10 @@ public class Gui {
 	private GuiFrame frame;
 	private Path path;
 	
-	public Gui() {
-		
+	private Controller controller;
+	
+	public Gui(Controller controller) {
+		this.controller = controller;
 	}
 
 	public int getWidth() {
@@ -69,6 +73,7 @@ public class Gui {
 			frame.stop();
 			running = false;
 			frame = null;
+			controller.stop();
 		}
 	}
 	
@@ -86,77 +91,19 @@ public class Gui {
 		Panel pMain = new Panel();
 		pMain.setLayout(new BoxLayout(pMain, BoxLayout.Y_AXIS));
 		addComponent("main", pMain);
+		addComponent("main/label", new Label("Options:"));
 
 		Button btnExtract = new Button("Extract");
-		btnExtract.addActionListener(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				try {
-					Extractor.extractJar();
-				} catch (IOException i) {
-					System.err.println("Unable to extract artists from jar");
-					i.printStackTrace();
-				}
-			}});
+		btnExtract.addActionListener(new ListenerExtractor());
 		addComponent("main/extract", btnExtract);
 		
 		Button btnLoad = new Button("Load Classes");
-		btnLoad.addActionListener(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				File f = new File(Settings.CODE_PATH);
-				if(f.exists() && f.isDirectory()) {
-					CodeBank.loadClasses(f);
-					ArtistBank.refresh();
-					loadArtPanel();
-				} else {
-					f.mkdirs();
-					System.out.println("Code directory created.");
-				}
-			}});
+		btnLoad.addActionListener(new ListenerLoad());
 		addComponent("main/load", btnLoad);
 
-		loadArtPanel();
-		
-	}
-	
-	private void loadArtPanel() {
-		Map<String, ArtManager> art = ArtistBank.getArtists();
-		synchronized(art) {
-			if(!art.isEmpty()) {
-				Panel pArt = new Panel();
-				addComponent("art", pArt);
-				java.awt.List list = new java.awt.List(art.size(), false);
-				for(String s : art.keySet()) {
-					list.add(s);
-				}
-				list.addActionListener(new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						String name = e.getActionCommand();
-						final ArtManager manager = ArtistBank.getArt(name);
-						//switch out a new one
-						ArtManager replace = manager.clone();
-						ArtistBank.addArt(replace);
-						//make the art
-						System.out.println("Loading art: " + manager.getName());
-						manager.setup();
-						System.out.println("Loaded art: " + manager.getName());
-						Thread t = new Thread(new Runnable() {
-							@Override
-							public void run() {
-								manager.start();
-							}
-						});
-						t.start();
-					}
-					
-				});
-				addComponent("art/list", list);
-				refresh();
-			}
-		}
+		Panel pArt = new Panel();
+		addComponent("art", pArt);
+		addComponent("art/label", new Label("Art:"));
 	}
 	
 	/*
@@ -164,5 +111,51 @@ public class Gui {
 	 */
 	
 	//action listeners
+	
+	private class ListenerExtractor implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			Gui.this.controller.getExtractor().extractJar();
+		}
+	}
+	
+	private class ListenerLoad implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			List<Class<?>> classes = Gui.this.controller.getClassLoader().loadClasses();
+			if(classes != null && !classes.isEmpty()) {
+				java.awt.List list = new java.awt.List(classes.size());
+				for(Class<?> c : classes) {
+					if(ArtManager.isArtist(c)) {
+						list.add(c.getName());
+						System.out.println("Added class: " + c.getName());
+					} else {
+						System.out.println("Skipped class: " + c.getName());
+					}
+				}
+				list.addActionListener(new ListenerArtList());
+				addComponent("art/list", list);
+			} else {
+				addComponent("art/list", null);
+			}
+			refresh();
+		}
+	}
+	
+	private class ListenerArtList implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			String s = e.getActionCommand();
+			if(s != null) {
+				Controller controller = Gui.this.controller;
+				Class<?> c = controller.getClassLoader().getClass(s);
+				ArtManager.createArt(controller, c);
+			}
+		}
+		
+	}
 
 }

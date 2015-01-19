@@ -15,14 +15,15 @@ import java.util.List;
 
 import sun.misc.Unsafe;
 
+@Deprecated
 @SuppressWarnings("restriction")
-public class ClassLoader {
+public class UnsafeClassInitializer {
 	
 	public static Class<?> loadClass(String name, URL url, byte[] code) {
 		Unsafe u = UnsafeKey.getUnsafe();
 		
 		//thanks to: http://stackoverflow.com/questions/27462043/implementing-interfaces-in-dynamic-classes-using-javas-unsafe/27462871#27462871
-		java.lang.ClassLoader loader = ClassLoader.class.getClassLoader(); //java.lang.ClassLoader.getSystemClassLoader();
+		ClassLoader loader = UnsafeClassInitializer.class.getClassLoader();
 		
 		Permissions perms=new Permissions();
 		perms.add(new RuntimePermission("accessDeclaredMembers"));
