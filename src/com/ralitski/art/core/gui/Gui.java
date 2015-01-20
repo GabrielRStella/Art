@@ -88,10 +88,14 @@ public class Gui {
 		Button btnExtract = new Button("Extract");
 		btnExtract.addActionListener(new ListenerExtractor());
 		addComponent("main/extract", btnExtract);
+
+		Button btnLoadClasses = new Button("Load Classes");
+		btnLoadClasses.addActionListener(new ListenerLoad());
+		addComponent("main/loadClasses", btnLoadClasses);
 		
-		Button btnLoad = new Button("Load Classes");
-		btnLoad.addActionListener(new ListenerLoad());
-		addComponent("main/load", btnLoad);
+		Button btnLoadSettings = new Button("Reload Settings");
+		btnLoadSettings.addActionListener(new ListenerLoadSettings());
+		addComponent("main/reloadSettings", btnLoadSettings);
 
 		Panel pArt = new Panel();
 		addComponent("art", pArt);
@@ -146,6 +150,15 @@ public class Gui {
 				Class<?> c = controller.getClassLoader().getClass(s);
 				ArtManager.createArt(controller, c);
 			}
+		}
+		
+	}
+	
+	private class ListenerLoadSettings implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			Gui.this.controller.getSettings().load();
 		}
 		
 	}
