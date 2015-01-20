@@ -7,9 +7,13 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.CollationKey;
+import java.text.Collator;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 public class Settings {
 	
@@ -88,11 +92,20 @@ public class Settings {
 		if(!f.exists()) {
 			f.createNewFile();
 		}
-		BufferedWriter writer = new BufferedWriter(new FileWriter(f));
+		
+		//alphabetical sort
+		Collator c = Collator.getInstance();
+		Map<CollationKey, String> sortMap = new TreeMap<>();
 		for(Entry<String, String> e : values.entrySet()) {
-			writer.write(e.getKey() + SEPARATOR + e.getValue());
+			sortMap.put(c.getCollationKey(e.getKey()), e.getValue());
+		}
+		
+		BufferedWriter writer = new BufferedWriter(new FileWriter(f));
+		for(Entry<CollationKey, String> e : sortMap.entrySet()) {
+			writer.write(e.getKey().getSourceString() + SEPARATOR + e.getValue());
 			writer.newLine();
 		}
+		
 		writer.close();
 	}
 	
