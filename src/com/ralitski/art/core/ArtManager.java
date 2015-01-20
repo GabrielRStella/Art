@@ -42,8 +42,8 @@ public class ArtManager implements Cloneable {
 	
 	public boolean setup() {
 		if(artist == null) throw new IllegalStateException("Art requires an Artist");
-		ArtCanvas canvas = new ArtCanvas(artist);
 		Settings s = getSettings();
+		ArtCanvas canvas = new ArtCanvas(artist, s);
 		artist.draw(canvas, s);
 		image = canvas.getImage();
 		

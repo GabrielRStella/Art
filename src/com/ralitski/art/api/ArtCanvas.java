@@ -3,14 +3,15 @@ package com.ralitski.art.api;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.awt.image.WritableRaster;
+
+import com.ralitski.art.core.Settings;
 
 public class ArtCanvas {
 	
 	private BufferedImage image;
 	
-	public ArtCanvas(Artist a) {
-		this(a.getWidth(), a.getHeight());
+	public ArtCanvas(Artist a, Settings s) {
+		this(a.getWidth(s), a.getHeight(s));
 	}
 	
 	public ArtCanvas(int width, int height) {
