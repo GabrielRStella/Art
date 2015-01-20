@@ -2,24 +2,16 @@ package com.ralitski.art.core.gui;
 
 import java.awt.Button;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Label;
 import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.swing.BoxLayout;
 
-import com.ralitski.art.api.Artist;
 import com.ralitski.art.core.ArtManager;
 import com.ralitski.art.core.Controller;
-import com.ralitski.art.core.Extractor;
-import com.ralitski.art.core.Settings;
 
 public class Gui {
 	

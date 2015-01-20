@@ -24,8 +24,6 @@ public class ArtManager implements Cloneable {
 	private boolean setup;
 	private volatile boolean running;
 	private FrameManager frame;
-
-    //TODO: produce the art and stuff
 	
 	public ArtManager(Controller controller, Class<?> c) throws Exception {
 		this.controller = controller;

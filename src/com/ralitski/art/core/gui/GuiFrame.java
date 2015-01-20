@@ -1,15 +1,10 @@
 package com.ralitski.art.core.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Canvas;
 import java.awt.Frame;
-import java.awt.Insets;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 import javax.swing.BoxLayout;
-
-import com.ralitski.art.api.Artist;
 
 public class GuiFrame implements WindowListener {
 
