@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.text.CollationKey;
 import java.text.Collator;
 import java.util.HashMap;
@@ -29,19 +30,25 @@ public class Settings {
 	}
 	
 	public String get(String key) {
-		return values.get(key);
+		synchronized(values) {
+			return values.get(key);
+		}
 	}
 	
 	public String get(String key, String defaultValue) {
-		String s = values.get(key);
-		if(s == null) {
-			values.put(key, s = defaultValue);
+		synchronized(values) {
+			String s = values.get(key);
+			if(s == null) {
+				values.put(key, s = defaultValue);
+			}
+			return s;
 		}
-		return s;
 	}
 	
 	public String set(String key, String value) {
-		return values.put(key, value);
+		synchronized(values) {
+			return values.put(key, value);
+		}
 	}
 	
 	public int getInt(String key) {
@@ -73,6 +80,29 @@ public class Settings {
 		}
 	}
 	
+	public <T extends Enum<?>> T getEnum(String key, Class<T> eClass) {
+		String s = get(key);
+		T t = valueOf(eClass, s);
+		return t;
+	}
+	
+	public <T extends Enum<?>> T getEnum(String key, T defaultValue, Class<T> eClass) {
+		T t = getEnum(key, eClass);
+		if(t == null) {
+			t = defaultValue;
+			if(t != null) set(key, t.name());
+			else set(key, null);
+		}
+		return t;
+	}
+	
+	public <T extends Enum<?>> T setEnum(String key, T value, Class<T> eClass) {
+		T t = getEnum(key, eClass);
+		if(value != null) set(key, value.name());
+		else set(key, null);
+		return t;
+	}
+	
 	public void save() {
 		try {
 			save(PATH);
@@ -94,8 +124,10 @@ public class Settings {
 		//alphabetical sort
 		Collator c = Collator.getInstance();
 		Map<CollationKey, String> sortMap = new TreeMap<>();
-		for(Entry<String, String> e : values.entrySet()) {
-			sortMap.put(c.getCollationKey(e.getKey()), e.getValue());
+		synchronized(values) {
+			for(Entry<String, String> e : values.entrySet()) {
+				sortMap.put(c.getCollationKey(e.getKey()), e.getValue());
+			}
 		}
 		
 		BufferedWriter writer = new BufferedWriter(new FileWriter(f));
@@ -127,12 +159,28 @@ public class Settings {
 		}
 		BufferedReader reader = new BufferedReader(new FileReader(f));
 		String line;
-		while((line = reader.readLine()) != null) {
-			String[] data = line.split(SEPARATOR, 2);
-			if(data.length == 2) {
-				values.put(data[0], data[1]);
+		synchronized(values) {
+			while((line = reader.readLine()) != null) {
+				String[] data = line.split(SEPARATOR, 2);
+				if(data.length == 2) {
+					values.put(data[0], data[1]);
+				}
 			}
 		}
 		reader.close();
 	}
+	
+	//utility method from my ArrayUtils
+    
+    @SuppressWarnings("unchecked")
+	private static <T extends Enum<?>> T valueOf(Class<T> clazz, String value) {
+        try {
+            Method m = clazz.getDeclaredMethod("valueOf", String.class);
+            Object o = m.invoke(null, value);
+            return (T)o;
+        } catch (Exception ex) {
+        	ex.printStackTrace();
+        }
+        return null;
+    }
 }

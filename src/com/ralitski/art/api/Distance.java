@@ -7,6 +7,12 @@ public enum Distance {
 			return p2.distance(p);
 		}
 	},
+	NOT_EUCLIDEAN {
+		@Override
+		public float distance(Point2d p, Point2d p2) {
+			return -p2.distance(p);
+		}
+	},
 	SQUARED {
 		@Override
 		public float distance(Point2d p, Point2d p2) {

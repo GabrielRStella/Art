@@ -1,4 +1,4 @@
-package com.ralitski.art.test;
+package com.ralitski.art.artists;
 import com.ralitski.art.api.PixelArtist;
 import com.ralitski.art.core.Settings;
 

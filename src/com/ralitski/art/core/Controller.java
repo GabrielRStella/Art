@@ -22,16 +22,27 @@ public class Controller {
 	private Settings settings;
 	
 	private Gui gui;
-	private Extractor extractor;
+	private Extractor classExtractor;
+	private Extractor scriptExtractor;
 	private ArtClassLoader loader;
 	
 	public Controller() {
 		instance = this;
 		this.settings = new Settings();
 		settings.load();
+		
+		String jarPath = settings.get("PATH_JAR", "./art.jar");
+		String codePath = settings.get("PATH_CODE", "./code/");
+		classExtractor = new Extractor(jarPath,
+				settings.get("PATH_CODE_IN_JAR", "com/ralitski/art/artists"),
+				codePath);
+		
+		scriptExtractor = new Extractor(jarPath,
+				settings.get("PATH_SCRIPT_IN_JAR", "com/ralitski/art/scripts"),
+				settings.get("PATH_SCRIPT", "./scripts/"));
+		
 		this.gui = new Gui(this);
-		extractor = new Extractor(this);
-		this.loader = new ArtClassLoader(new File(settings.get("CODE_PATH")));
+		this.loader = new ArtClassLoader(new File(codePath));
 	}
 	
 	public Settings getSettings() {
@@ -42,8 +53,12 @@ public class Controller {
 		return gui;
 	}
 	
-	public Extractor getExtractor() {
-		return extractor;
+	public Extractor getClassExtractor() {
+		return classExtractor;
+	}
+	
+	public Extractor getScriptExtractor() {
+		return scriptExtractor;
 	}
 	
 	public ArtClassLoader getClassLoader() {

@@ -10,18 +10,14 @@ import java.util.jar.JarFile;
 
 public class Extractor {
 	
-//	private Controller controller;
-	
 	private String jarPath;
 	private String pathInJar;
 	private String codePath;
 	
-	public Extractor(Controller controller) {
-//		this.controller = controller;
-		Settings s = controller.getSettings();
-		jarPath = s.get("JAR_PATH", "./art.jar");
-		pathInJar = s.get("PATH_IN_JAR", "com/ralitski/art/test");
-		codePath = s.get("CODE_PATH", "./code/");
+	public Extractor(String jarPath, String pathInJar, String codePath) {
+		this.jarPath = jarPath;
+		this.pathInJar = pathInJar;
+		this.codePath = codePath;
 	}
 	
 	public void extractJar() {

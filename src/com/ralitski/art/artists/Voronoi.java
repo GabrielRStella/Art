@@ -1,12 +1,9 @@
-package com.ralitski.art.test;
+package com.ralitski.art.artists;
 
 import java.awt.Color;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
-import java.util.Map.Entry;
 
 import com.ralitski.art.api.ArtCanvas;
 import com.ralitski.art.api.Artist;
@@ -15,12 +12,7 @@ import com.ralitski.art.api.Point2d;
 import com.ralitski.art.core.Settings;
 
 //TODO: cleanup and use settings
-public class Voronoi2 implements Artist {
-
-	private static final int NODES = 10;
-	private static final int R_NODES = 16;
-	private static final int COLOR = 700;
-	private static final int MIN_COLOR = 150;
+public class Voronoi implements Artist {
 
 	@Override
 	public int getWidth(Settings settings) {
@@ -34,18 +26,21 @@ public class Voronoi2 implements Artist {
 
 	@Override
 	public void draw(ArtCanvas canvas, Settings settings) {
+		int NODES = settings.getInt("NODES_MIN", 7);
+		int R_NODES = settings.getInt("NODES_RAND", 5);
+		int COLOR = settings.getInt("COLOR", 550);
+		int MIN_COLOR = settings.getInt("COLOR_MIN", 80);
+		Distance d = settings.getEnum("METRIC", Distance.WONKY, Distance.class);
+		
 		Random random = new Random();
 		List<Node> nodes = new LinkedList<>();
-		Map<Node, List<Point2d>> sections = new HashMap<>();
 		float w = getWidth(settings);
 		float h = getHeight(settings);
 		for(int i = 0; i < NODES + random.nextInt(R_NODES); i++) {
 			Node n = new Node(random.nextFloat() * w, random.nextFloat() * h);
-			n.setColor(random);
+			n.setColor(random, COLOR, MIN_COLOR);
 			nodes.add(n);
-			sections.put(n, new LinkedList<Point2d>());
 		}
-		Distance d = Distance.TAXICAB;
 		for(int x = 0; x < w; x++) {
 			for(int y = 0; y < h; y++) {
 				Point2d p = new Point2d(x, y);
@@ -58,36 +53,20 @@ public class Voronoi2 implements Artist {
 						minDist = dist;
 					}
 				}
-				sections.get(min).add(p);
-				min.maxDist = Math.max(min.maxDist, minDist);
-			}
-		}
-		for(Entry<Node, List<Point2d>> section : sections.entrySet()) {
-			Node n = section.getKey();
-			for(Point2d p : section.getValue()) {
-				float grade = d.distance(p, n) / n.maxDist;
-				Color c = n.color;
-				float red = (float)c.getRed() / 255F * grade;
-				float green = (float)c.getGreen() / 255F * grade;
-				float blue = (float)c.getBlue() / 255F * grade;
-				c = new Color(red, green, blue);
-				int x = (int)p.getX();
-				int y = (int)p.getY();
-				canvas.setColor(x, y, c);
+				canvas.setColor(x, y, min.color);
 			}
 		}
 	}
 	
 	private class Node extends Point2d {
 		
-		private float maxDist;
 		private Color color;
 		
 		public Node(float x, float y) {
 			super(x, y);
 		}
 		
-		public void setColor(Random rand) {
+		public void setColor(Random rand, int COLOR, int MIN_COLOR) {
 			int r;
 			int g;
 			int b;
@@ -95,12 +74,12 @@ public class Voronoi2 implements Artist {
 				r = rand.nextInt(255);
 				g = rand.nextInt(255);
 				b = rand.nextInt(255);
-			} while((r + g + b > COLOR && !(check(r, g, b) || check(g, b, r) || check(b, r, g))));
+			} while(r + g + b > COLOR || !(check(r, g, b) || check(g, b, r) || check(b, r, g)) || r + g + b < MIN_COLOR);
 			color = new Color(r, g, b);
 		}
 		
 		public boolean check(int a, int b, int c) {
-			return a - b - c > MIN_COLOR;
+			return a - b - c > 0;
 		}
 	}
 
