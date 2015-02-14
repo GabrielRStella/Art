@@ -9,7 +9,8 @@ public class StatementCreatorCommand implements StatementCreator {
 
 	@Override
 	public Statement read(StringInputStream in, StatementReader reader) {
-		// TODO Auto-generated method stub
+		String cmd = in.read(' ');
+		//hmmm... TODO
 		return null;
 	}
 

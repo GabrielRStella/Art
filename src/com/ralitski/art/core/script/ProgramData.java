@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+//TODO: scopes; maybe handle like SubSettings
+//TODO: system values
 public class ProgramData {
 	
 	private Map<String, ValueList> objects = new HashMap<>();

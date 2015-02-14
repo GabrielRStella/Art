@@ -18,12 +18,13 @@ public class ScriptReader {
 		this.reader = reader;
 	}
 	
-	public Statement read(String[] sArray) {
+	public Program read(String[] sArray) {
 		return read(Util.combine(sArray, '\n'));
 	}
 	
-	public Statement read(String s) {
+	public Program read(String s) {
 		StringInputStream in = new StringInputStream(s);
-		return reader.readAll(in);
+		Statement body = reader.readAll(in);
+		return new Program(body);
 	}
 }

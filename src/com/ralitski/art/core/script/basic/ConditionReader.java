@@ -5,17 +5,15 @@ import com.ralitski.art.core.script.StatementCreator;
 import com.ralitski.art.core.script.StatementReader;
 import com.ralitski.art.core.script.StringInputStream;
 
-public class StatementCreatorCondition implements StatementCreator {
+public class ConditionReader implements StatementCreator {
 
 	@Override
 	public Statement read(StringInputStream in, StatementReader reader) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public boolean identify(StringInputStream in) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
