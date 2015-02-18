@@ -1,6 +1,7 @@
 package com.ralitski.art.core.script.basic;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.ralitski.art.api.Util;
@@ -13,6 +14,16 @@ public class StatementBody extends AbstractStatement {
 	private List<Statement> children = new ArrayList<>();
 	private Statement current;
 	private boolean running = false;
+	
+	public StatementBody() {}
+	
+	public StatementBody(Statement[] children) {
+		this.children.addAll(Arrays.asList(children));
+	}
+	
+	public StatementBody(List<Statement> children) {
+		this.children.addAll(children);
+	}
 
 	@Override
 	public String getPlaintext() {

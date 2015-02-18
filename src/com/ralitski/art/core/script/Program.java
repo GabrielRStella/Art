@@ -5,9 +5,9 @@ public class Program {
 	private Statement body;
 	private ProgramData data;
 	
-	public Program(Statement body) {
+	public Program(Statement body, ProgramData data) {
 		this.body = body;
-		this.data = new ProgramData();
+		this.data = data;
 	}
 	
 	public Statement getBody() {

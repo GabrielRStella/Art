@@ -30,6 +30,10 @@ public class ValueList {
 		return false;
 	}
 	
+	public boolean has(String s) {
+		return values.containsKey(s);
+	}
+	
 	public Class<?> getTypeOf(String key) {
 		Value v = values.get(key);
 		return v != null ? v.type : null;
@@ -118,6 +122,7 @@ public class ValueList {
     	Value v = values.get(field);
     	if(v == null) {
     		values.put(field, v = new Value(value.getClass()));
+    		v.value = value;
         	return null;
     	} else {
     		Object prevValue = v.value;

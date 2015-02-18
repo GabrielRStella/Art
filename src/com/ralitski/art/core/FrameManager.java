@@ -10,8 +10,6 @@ import java.awt.Insets;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-import com.ralitski.art.api.Artist;
-
 public class FrameManager implements WindowListener {
 
     //TODO: produce the art and stuff
@@ -26,10 +24,7 @@ public class FrameManager implements WindowListener {
 		this.manager = manager;
 	}
 	
-	public void setup(Settings settings) {
-		//for width and height
-        Artist a = manager.getArtist();
-
+	public void setup(int w, int h) {
         this.frame = new Frame();
         frame.setTitle(manager.getName());
         frame.setBackground(java.awt.Color.BLACK);
@@ -40,8 +35,8 @@ public class FrameManager implements WindowListener {
         Insets insets = frame.getInsets();
         //adjustment constant, idk why it's necessary (but it is)
         int cons = 2;
-        int width = a.getWidth(settings) + insets.left - cons;
-        int height = a.getHeight(settings) + insets.top - cons;
+        int width = w + insets.left - cons;
+        int height = h + insets.top - cons;
         frame.setSize(width, height);
         frame.setResizable(false);
         

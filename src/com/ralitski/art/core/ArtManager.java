@@ -7,17 +7,12 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import com.ralitski.art.api.ArtCanvas;
-import com.ralitski.art.api.Artist;
-import com.ralitski.art.api.PixelArtist;
-
 
 public class ArtManager implements Cloneable {
 	
 	private Controller controller;
+	private ArtCreator creator;
 	
-	private Class<?> artClass;
-	private Artist artist;
 	BufferedImage image;
 	
 	//running
@@ -25,25 +20,16 @@ public class ArtManager implements Cloneable {
 	private volatile boolean running;
 	private FrameManager frame;
 	
-	public ArtManager(Controller controller, Class<?> c) throws Exception {
+	public ArtManager(Controller controller, ArtCreator creator) throws Exception {
 		this.controller = controller;
-		this.artClass = c;
-		try {
-			Object o = c.newInstance();
-			artist = getArtist(o);
-		} catch (InstantiationException e) {
-			System.err.println("Unable to instantiate class " + c.getName());
-		}
+		this.creator = creator;
 	}
 	
 	//running
 	
 	public boolean setup() {
-		if(artist == null) throw new IllegalStateException("Art requires an Artist");
 		Settings s = getSettings();
-		ArtCanvas canvas = new ArtCanvas(artist, s);
-		artist.draw(canvas, s);
-		image = canvas.getImage();
+		image = creator.drawImage(s);
 		
 		try {
 			File f = new File("./art/" + getName() + ".png");
@@ -56,7 +42,7 @@ public class ArtManager implements Cloneable {
 		}
 		
 		frame = new FrameManager(this);
-		frame.setup(s);
+		frame.setup(image.getWidth(), image.getHeight());
 		running = true;
 		return setup = true;
 	}
@@ -67,7 +53,7 @@ public class ArtManager implements Cloneable {
 
     public void start() {
         if(!setup) return;
-        artClass = null; //allow new art to be generated
+        creator = null; //allow new art to be generated
         while (running && frame.running()) {
         	//uh...
         }
@@ -83,11 +69,7 @@ public class ArtManager implements Cloneable {
     //misc
     
     public String getName() {
-    	return artClass.getSimpleName();
-    }
-    
-    public Artist getArtist() {
-    	return artist;
+    	return creator.getName();
     }
     
     public Settings getSettings() {
@@ -99,38 +81,39 @@ public class ArtManager implements Cloneable {
     }
     
     //statik
-    
-    private static Artist getArtist(Object o) {
-    	if(o instanceof Artist) {
-    		return (Artist)o;
-    	} else if(o instanceof PixelArtist) {
-    		return new PixelArtistFeed((PixelArtist)o);
-    	} else {
-    		return null;
-    	}
-    }
 	
 	public static void createArt(Controller controller, Class<?> c) {
 		try {
-			final ArtManager manager = new ArtManager(controller, c);
-			if(manager.getArtist() != null) {
-				System.out.println("Loading art: " + manager.getName());
-				manager.setup();
-				System.out.println("Loaded art: " + manager.getName());
-				Thread t = new Thread(new Runnable() {
-					@Override
-					public void run() {
-						manager.start();
-					}
-				});
-				t.start();
+			ArtCreatorClass creator = new ArtCreatorClass(c);
+			if(creator.getArtist() != null) {
+				ArtManager manager = new ArtManager(controller, creator);
+				createArt(manager);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public static boolean isArtist(Class<?> c) {
-		return Artist.class.isAssignableFrom(c) || PixelArtist.class.isAssignableFrom(c);
+	public static void createArt(Controller controller, String name, String script) {
+		ArtCreatorScript creator = new ArtCreatorScript(name, script);
+		try {
+			ArtManager manager = new ArtManager(controller, creator);
+			createArt(manager);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void createArt(final ArtManager manager) {
+		System.out.println("Loading art: " + manager.getName());
+		manager.setup();
+		System.out.println("Loaded art: " + manager.getName());
+		Thread t = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				manager.start();
+			}
+		});
+		t.start();
 	}
 }

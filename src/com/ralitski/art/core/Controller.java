@@ -24,7 +24,8 @@ public class Controller {
 	private Gui gui;
 	private Extractor classExtractor;
 	private Extractor scriptExtractor;
-	private ArtClassLoader loader;
+	private ArtClassLoader artLoader;
+	private ScriptLoader scriptLoader;
 	
 	public Controller() {
 		instance = this;
@@ -33,16 +34,20 @@ public class Controller {
 		
 		String jarPath = settings.get("PATH_JAR", "./art.jar");
 		String codePath = settings.get("PATH_CODE", "./code/");
+		String scriptPath = settings.get("PATH_SCRIPT", "./scripts/");
 		classExtractor = new Extractor(jarPath,
 				settings.get("PATH_CODE_IN_JAR", "com/ralitski/art/artists"),
-				codePath);
+				codePath,
+				".class");
 		
 		scriptExtractor = new Extractor(jarPath,
 				settings.get("PATH_SCRIPT_IN_JAR", "com/ralitski/art/scripts"),
-				settings.get("PATH_SCRIPT", "./scripts/"));
+				scriptPath,
+				settings.get("SCRIPT_FILE_TYPE", ".txt"));
 		
 		this.gui = new Gui(this);
-		this.loader = new ArtClassLoader(new File(codePath));
+		this.artLoader = new ArtClassLoader(new File(codePath));
+		this.scriptLoader = new ScriptLoader(new File(scriptPath));
 	}
 	
 	public Settings getSettings() {
@@ -62,7 +67,11 @@ public class Controller {
 	}
 	
 	public ArtClassLoader getClassLoader() {
-		return loader;
+		return artLoader;
+	}
+	
+	public ScriptLoader getScriptLoader() {
+		return scriptLoader;
 	}
 	
 	public void start() {

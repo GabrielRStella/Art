@@ -27,11 +27,17 @@ public class ArtCanvas {
 	}
 	
 	public void setColor(int x, int y, int color) {
+		//is actually argb
 		image.setRGB(x, y, color);
 	}
 	
 	public void setColor(int x, int y, int red, int green, int blue) {
-		int color = (red << 16) | (green << 8) | blue;
+		int color = (red << 16) | (green << 8) | blue | 0xFF000000;
+		setColor(x, y, color);
+	}
+	
+	public void setColor(int x, int y, int red, int green, int blue, int alpha) {
+		int color = (alpha << 24) | (red << 16) | (green << 8) | blue;
 		setColor(x, y, color);
 	}
 	

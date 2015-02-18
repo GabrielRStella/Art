@@ -2,13 +2,9 @@ package com.ralitski.art.core.script.basic;
 
 import com.ralitski.art.core.script.Program;
 
-public class Condition {
+public interface Condition {
 	
-	public boolean evaluate(Program program) {
-		return false;
-	}
+	boolean evaluate(Program program);
 	
-	public String getPlainText() {
-		return null;
-	}
+	String getPlainText();
 }

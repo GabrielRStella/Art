@@ -1,12 +1,9 @@
 package com.ralitski.art.artists;
 
-import java.awt.Color; 
-import java.util.HashMap;
+import java.awt.Color;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
-import java.util.Map.Entry;
 
 import com.ralitski.art.api.ArtCanvas;
 import com.ralitski.art.api.Artist;
@@ -31,7 +28,7 @@ public class VoronoiSmooth implements Artist {
 	public void draw(ArtCanvas canvas, Settings settings) {
 		int NODES = settings.getInt("NODES_MIN", 10);
 		int R_NODES = settings.getInt("NODES_RAND", 16);
-		Distance d = settings.getEnum("METRIC", Distance.TAXICAB, Distance.class);
+		Distance d = settings.getEnum("METRIC", Distance.EUCLIDEAN, Distance.class);
 		float scale = settings.getInt("scale", 4);
 		scale = 1F/scale;
 		
@@ -65,7 +62,7 @@ public class VoronoiSmooth implements Artist {
 				float g = 0;
 				float b = 0;
 				for(Node n : nodes) {
-					float dist = d.distance(p, n);
+					float dist = getDist(p, n, d, w, h);
 					dist /= n.maxDist * scale;
 					float r2 = n.color.getRed();
 					r2 = r2 / 255F / dist;
@@ -86,21 +83,37 @@ public class VoronoiSmooth implements Artist {
 		}
 	}
 	
-	private class Node extends Point2d {
+	private float getDist(Point2d p, Point2d p2, Distance d, float w, float h) {
+		float min = Float.MAX_VALUE;
+		for(int i = -1; i <= 1; i++) {
+			for(int j = -1; j <= 1; j++) {
+				float x = i;
+				float y = j;
+				x *= w;
+				y *= h;
+				Point2d p3 = new Point2d(p2.getX() + x, p2.getY() + y);
+				float dist = d.distance(p, p3);
+				if(dist < min) min = dist;
+			}
+		}
+		return min;
+	}
+	
+	private static class Node extends Point2d {
+		
+		private static Color[] colors = new Color[]{
+			Color.RED,
+			Color.GREEN,
+			Color.BLUE
+		};
 		
 		private float maxDist;
 		private Color color;
 		
 		public Node(float x, float y, Random rand) {
 			super(x, y);
-			int i = rand.nextInt(3);
-			if(i == 0) {
-				color = Color.RED;
-			} else if(i == 1) {
-				color = Color.GREEN;
-			} else {
-				color = Color.BLUE;
-			}
+			int i = rand.nextInt(colors.length);
+			color = colors[i];
 		}
 	}
 

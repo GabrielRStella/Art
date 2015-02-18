@@ -9,6 +9,11 @@ public class StatementCommand extends AbstractStatement {
 	private String command;
 	private String arguments;
 
+	public StatementCommand(String cmd, String args) {
+		this.command = cmd;
+		this.arguments = args;
+	}
+
 	@Override
 	public void execute(Program program) {
 		ValueList commands = program.getData().getObject("$COMMANDS");

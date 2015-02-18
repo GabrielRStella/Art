@@ -22,12 +22,17 @@ public class ProgramData {
 		return objects.get(name);
 	}
 	
-	public void addObject(String name, Map<String, Class<?>> data) {
-		addObject(name, new ValueList(data));
+	public ValueList addObject(String name) {
+		return addObject(name, new ValueList());
 	}
 	
-	public void addObject(String name, ValueList values) {
+	public ValueList addObject(String name, Map<String, Class<?>> data) {
+		return addObject(name, new ValueList(data));
+	}
+	
+	public ValueList addObject(String name, ValueList values) {
 		objects.put(name, values);
+		return values;
 	}
 	
 	public ValueList deleteObject(String name) {
