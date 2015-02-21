@@ -44,4 +44,19 @@ public class ArtCanvas {
 	public void setColor(int x, int y, Color color) {
 		setColor(x, y, color.getRGB());
 	}
+	
+	public void setColor(int x, int y, float r, float g, float b) {
+		int rI = (int)Math.floor(r * 255F);
+		int gI = (int)Math.floor(g * 255F);
+		int bI = (int)Math.floor(b * 255F);
+		setColor(x, y, rI, gI, bI);
+	}
+	
+	public void setColor(int x, int y, float r, float g, float b, float a) {
+		int rI = (int)Math.floor(r * 255F);
+		int gI = (int)Math.floor(g * 255F);
+		int bI = (int)Math.floor(b * 255F);
+		int aI = (int)Math.floor(a * 255F);
+		setColor(x, y, rI, gI, bI, aI);
+	}
 }

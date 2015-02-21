@@ -5,6 +5,7 @@ import com.ralitski.art.core.script.Statement;
 import com.ralitski.art.core.script.StatementCreator;
 import com.ralitski.art.core.script.StatementReader;
 import com.ralitski.art.core.script.StringInputStream;
+import com.ralitski.art.core.script.exception.SyntaxException;
 
 public class StatementCreatorIF implements StatementCreator {
 
@@ -22,7 +23,7 @@ public class StatementCreatorIF implements StatementCreator {
 					String line;
 					StatementBody body = new StatementBody();
 					while(true) {
-						//ugh am I gonna have to store if-elseif-else statements like trees? uuugh
+						//hmmmmmmmmmmmmmmmmmmmmmmm
 						line = in.read('\n');
 						if(line.contains("ENDIF")) {
 							//end statement
@@ -35,11 +36,16 @@ public class StatementCreatorIF implements StatementCreator {
 					//single-line if
 					in.back(avail - in.available());
 					Statement body = reader.readOne(in, data);
-					
+					StatementIF statement = new StatementIF();
+					statement.addChild(c, body);
+					return statement;
 				}
+			} else {
+				//no THEN
+				throw new SyntaxException("IF must be followed by THEN");
 			}
 		}
-		return null;
+		throw new SyntaxException("If statements must start with \"IF\"");
 	}
 
 	@Override

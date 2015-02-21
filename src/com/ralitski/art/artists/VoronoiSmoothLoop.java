@@ -12,7 +12,7 @@ import com.ralitski.art.api.Point2d;
 import com.ralitski.art.core.Settings;
 
 //TODO: cleanup and use settings
-public class VoronoiSmooth implements Artist {
+public class VoronoiSmoothLoop implements Artist {
 
 	@Override
 	public int getWidth(Settings settings) {
@@ -84,19 +84,19 @@ public class VoronoiSmooth implements Artist {
 	}
 	
 	private float getDist(Point2d p, Point2d p2, Distance d, float w, float h) {
-//		float min = Float.MAX_VALUE;
-//		for(int i = -1; i <= 1; i++) {
-//			for(int j = -1; j <= 1; j++) {
-//				float x = i;
-//				float y = j;
-//				x *= w;
-//				y *= h;
-//				Point2d p3 = new Point2d(p2.getX() + x, p2.getY() + y);
-//				float dist = d.distance(p, p3);
-//				if(dist < min) min = dist;
-//			}
-//		}
-		return d.distance(p, p2);
+		float min = Float.MAX_VALUE;
+		for(int i = -1; i <= 1; i++) {
+			for(int j = -1; j <= 1; j++) {
+				float x = i;
+				float y = j;
+				x *= w;
+				y *= h;
+				Point2d p3 = new Point2d(p2.getX() + x, p2.getY() + y);
+				float dist = d.distance(p, p3);
+				if(dist < min) min = dist;
+			}
+		}
+		return min;
 	}
 	
 	private static class Node extends Point2d {

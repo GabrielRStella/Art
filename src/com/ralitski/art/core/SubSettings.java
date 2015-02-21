@@ -2,6 +2,7 @@ package com.ralitski.art.core;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class SubSettings extends Settings {
 	
@@ -16,6 +17,24 @@ public class SubSettings extends Settings {
 	
 	private String getPath(String key) {
 		return path + key;
+	}
+	
+	public List<String> getComments(String key) {
+		return parent.getComments(getPath(key));
+	}
+	
+	/**
+	 * 
+	 * @param key
+	 * @param comment
+	 * @return if the key was found and the comment was added (or previously there)
+	 */
+	public boolean addComment(String key, String comment) {
+		return parent.addComment(getPath(key), comment);
+	}
+	
+	public void removeComments(String key) {
+		parent.removeComments(getPath(key));
 	}
 	
 	public String get(String key) {

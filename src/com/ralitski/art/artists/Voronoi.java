@@ -31,6 +31,7 @@ public class Voronoi implements Artist {
 		int COLOR = settings.getInt("COLOR", 550);
 		int MIN_COLOR = settings.getInt("COLOR_MIN", 80);
 		Distance d = settings.getEnum("METRIC", Distance.WONKY, Distance.class);
+		settings.addComment("METRIC", "Metrics: " + Distance.types());
 		
 		Random random = new Random();
 		List<Node> nodes = new LinkedList<>();

@@ -16,8 +16,18 @@ public class StatementCreatorCommand implements StatementCreator {
 		Object command = commands.get(cmd);
 		if(command instanceof Command) {
 			String args = in.read('\n');
-			return new StatementCommand(cmd, args);
+			Command c = (Command)command;
+			CommandExecutor exec = c.init(data, args);
+			return new StatementCommand(exec);
 		}
+		/*
+		ValueList commands = program.getData().getObject("$COMMANDS");
+		Object command = commands.get(this.command);
+		if(command instanceof Command) {
+			Command c = (Command)command;
+			c.execute(program, arguments);
+		}
+		 */
 		return null;
 	}
 

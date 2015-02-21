@@ -71,6 +71,10 @@ public class StringOutputStream {
         return Arrays.copyOf(buf, count);
     }
     
+    public synchronized int capacity() {
+    	return buf.length - count;
+    }
+    
     public String toString() {
     	return new String(buf, 0, count);
     }
