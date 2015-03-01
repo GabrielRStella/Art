@@ -25,6 +25,14 @@ public class ArtCanvas {
 	public Graphics2D getGraphics() {
 		return image.createGraphics();
 	}
+
+	public void setSize(int width, int height) {
+		image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+	}
+
+	public void setImage(BufferedImage image) {
+		this.image = image;
+	}
 	
 	public void setColor(int x, int y, int color) {
 		//is actually argb
