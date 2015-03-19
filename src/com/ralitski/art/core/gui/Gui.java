@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
 
 import com.ralitski.art.core.Controller;
+import com.ralitski.art.core.Settings;
 
 public class Gui {
 	
@@ -42,20 +43,23 @@ public class Gui {
 		running = false;
 	}
 	
-	public void setup() {
+	public void setup(Settings settings) {
 		frame = new GuiFrame(this);
 		frame.setup();
 		
 		path = new Path(frame.getFrame());
 		
+		int width = settings.getInt("guiWidth", 80);
+		int height = settings.getInt("guiHeight", 20);
+		
 		//add console
 		Panel pConsole = new Panel();
 		addComponent("console", pConsole);
 		pConsole.setLayout(new BoxLayout(pConsole, BoxLayout.Y_AXIS));
-		log = new TextArea(10, 60);
+		log = new TextArea(height, width);
 		log.setEditable(false);
 		addComponent("console/log", log);
-		in = new TextField(60);
+		in = new TextField(width);
 		in.addActionListener(new ConsoleInputListener());
 		addComponent("console/in", in);
 

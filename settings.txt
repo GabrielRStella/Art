@@ -1,5 +1,7 @@
 controller.CODE_PATH_DEST: ./code/
-controller.CODE_PATH_SRC: /com/ralitski/art/artists
+controller.CODE_PATH_SRC: com/ralitski/art/artists
+controller.guiHeight: 20
+controller.guiWidth: 80
 controller.SCRIPT_FILE_TYPE: .txt
 controller.SCRIPT_PATH_DEST: ./scripts/
 controller.SCRIPT_PATH_SRC: com/ralitski/art/scripts

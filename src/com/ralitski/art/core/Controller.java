@@ -14,6 +14,7 @@ import com.ralitski.art.core.gui.Gui;
 public class Controller {
 	
 	private static Controller instance;
+	private static final String LOG_PREFIX = ">";
 	
 	public static Controller getInstance() {
 		return instance;
@@ -98,10 +99,10 @@ public class Controller {
 		this.artLoader = new ArtClassLoader(new File(codePath));
 		this.scriptLoader = new ScriptLoader(new File(scriptPath));
 		this.cmd = new CommandHandler(this);
+		gui.setup(settings);
 	}
 	
 	public void start() {
-		gui.setup();
 		gui.start();
 	}
 	
@@ -111,8 +112,12 @@ public class Controller {
 	
 	public void dispatchCommand(String cmd) {
 		if(cmd != null && !cmd.isEmpty()) {
-			gui.log(cmd + "\n");
+			log(LOG_PREFIX + cmd);
 			this.cmd.handle(cmd);
 		}
+	}
+
+	public void log(String s) {
+		gui.log(s + "\n");
 	}
 }
