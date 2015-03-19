@@ -1,5 +1,6 @@
 package com.ralitski.art.core;
 
+import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.util.Collection;
 import java.util.List;
@@ -142,6 +143,42 @@ public class ConsoleCommands {
 			} else {
 				controller.log("The specified class \"" + args + "\" was not detected.");
 			}
+		}
+	}
+	
+	/*
+		
+	 */
+	
+	@CommandMark(name = "font",
+			aliases = {"f"},
+			usage = "[page]",
+			help = {"Lists the available fonts."})
+	public void onFont(String alias, String args, Controller controller) {
+		if(!args.isEmpty()) {
+			try {
+				int i = Integer.parseInt(args);
+				int j = (i - 1) * 10;
+				String[] s = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+				if(j >= s.length) {
+					int pages = (s.length - (s.length % 10)) / 10;
+					if(s.length % 10 != 0) pages++;
+					controller.log("Page " + i + " is out of range (" + pages + " pages).");
+				} else {
+					controller.log("Page " + i + " of fonts:");
+					int max = Math.min(j + 10, s.length);
+					for(int k = j; k < max; k++) {
+						controller.log("   " + s[k]);
+					}
+				}
+			} catch (NumberFormatException e) {
+				controller.log("\"" + args + "\" is not a valid page number.");
+			}
+		} else {
+			String[] s = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+			int pages = (s.length - (s.length % 10)) / 10;
+			if(s.length % 10 != 0) pages++;
+			controller.log(s.length + " fonts detected (" + pages + " pages).");
 		}
 	}
 }
