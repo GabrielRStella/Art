@@ -1,0 +1,5 @@
+controller.CODE_PATH_DEST: ./code/
+controller.CODE_PATH_SRC: /com/ralitski/art/artists
+controller.SCRIPT_FILE_TYPE: .txt
+controller.SCRIPT_PATH_DEST: ./scripts/
+controller.SCRIPT_PATH_SRC: com/ralitski/art/scripts

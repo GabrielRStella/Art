@@ -11,11 +11,13 @@ public class ExtractorFile implements Runnable {
 	
 	private String sourceDir;
 	private String destDir;
+	private String destDirPrefix;
 	private String fileType;
 	
-	public ExtractorFile(String sourceDir, String destDir, String fileType) {
+	public ExtractorFile(String sourceDir, String destDir, String destDirPrefix, String fileType) {
 		this.sourceDir = new File(sourceDir).getAbsolutePath();
 		this.destDir = new File(destDir).getAbsolutePath();
+		this.destDirPrefix = destDirPrefix;
 		this.fileType = fileType;
 	}
 
@@ -46,7 +48,7 @@ public class ExtractorFile implements Runnable {
 	private void copyFile(File f) throws IOException {
 		String s = f.getAbsolutePath();
 		s = s.substring(sourceDir.length());
-		String dst = destDir + s;
+		String dst = destDir + "/" + destDirPrefix + s;
 		copyFile(f, new File(dst));
 	}
 	

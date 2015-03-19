@@ -3,6 +3,7 @@ package com.ralitski.art.core;
 import java.io.File;
 import java.net.URISyntaxException;
 
+import com.ralitski.art.core.cmd.CommandHandler;
 import com.ralitski.art.core.gui.Gui;
 
 /**
@@ -27,6 +28,7 @@ public class Controller {
 	private Runnable scriptExtractor;
 	private ArtClassLoader artLoader;
 	private ScriptLoader scriptLoader;
+	private CommandHandler cmd;
 	
 	public Controller() {
 	}
@@ -61,10 +63,13 @@ public class Controller {
 		settings.load();
 
 		settings = settings.getSubSettings("controller");
-		String codePath = settings.get("PATH_CODE", "./code/");
-		String scriptPath = settings.get("PATH_SCRIPT", "./scripts/");
+		String codePath = settings.get("CODE_PATH_DEST", "./code/");
+		String scriptPath = settings.get("SCRIPT_PATH_DEST", "./scripts/");
+		String codePathSrc = settings.get("CODE_PATH_SRC", "com/ralitski/art/artists");
+		String scriptPathSrc = settings.get("SCRIPT_PATH_SRC", "com/ralitski/art/scripts");
 		String fileTypeScript = settings.get("SCRIPT_FILE_TYPE", ".txt");
 		String mainPath;
+		//detect jar
 		try {
 			mainPath = Main.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
 		} catch (URISyntaxException e) {
@@ -72,24 +77,27 @@ public class Controller {
 			e.printStackTrace();
 			mainPath = "./art.jar";
 		}
+		//create extractors
 		if(mainPath.endsWith(".jar")) {
 			//jar
 			classExtractor = new ExtractorJar(mainPath,
-					settings.get("PATH_CODE_IN_JAR", "com/ralitski/art/artists"),
+					codePathSrc,
 					codePath,
 					".class");
 			scriptExtractor = new ExtractorJar(mainPath,
-					settings.get("PATH_SCRIPT_IN_JAR", "com/ralitski/art/scripts"),
+					scriptPathSrc,
 					scriptPath,
 					fileTypeScript);
 		} else {
 			//probably IDE
-			classExtractor = new ExtractorFile(mainPath, codePath, ".class");
+			classExtractor = new ExtractorFile(mainPath + codePathSrc, codePath, codePathSrc, ".class");
+			scriptExtractor = new ExtractorFile(mainPath + scriptPathSrc, scriptPath, scriptPathSrc, fileTypeScript);
 		}
 		
 		this.gui = new Gui(this);
 		this.artLoader = new ArtClassLoader(new File(codePath));
 		this.scriptLoader = new ScriptLoader(new File(scriptPath));
+		this.cmd = new CommandHandler(this);
 	}
 	
 	public void start() {
@@ -104,6 +112,7 @@ public class Controller {
 	public void dispatchCommand(String cmd) {
 		if(cmd != null && !cmd.isEmpty()) {
 			gui.log(cmd + "\n");
+			this.cmd.handle(cmd);
 		}
 	}
 }
