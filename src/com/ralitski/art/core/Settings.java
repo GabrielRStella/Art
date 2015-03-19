@@ -133,6 +133,39 @@ public class Settings {
 		}
 	}
 	
+	public int getIntRadix(String key, int radix) {
+		try {
+			return Integer.parseInt(get(key), radix);
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			return 0;
+		}
+	}
+	
+	public int getIntRadix(String key, String defaultValue, int radix) {
+		return getIntRadix(key, Integer.parseInt(defaultValue, radix), radix);
+	}
+	
+	public int getIntRadix(String key, int defaultValue, int radix) {
+		String raw = get(key, ""+Integer.toString(defaultValue, radix));
+		try {
+			return Integer.parseInt(raw, radix);
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			set(key, ""+Integer.toString(defaultValue, radix));
+			return defaultValue;
+		}
+	}
+	
+	public int setIntRadix(String key, int value, int radix) {
+		try {
+			return Integer.parseInt(set(key, ""+Integer.toString(value, radix)), radix);
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			return 0;
+		}
+	}
+	
 	public float getFloat(String key) {
 		try {
 			return Float.parseFloat(get(key));

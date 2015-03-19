@@ -1,5 +1,7 @@
 package com.ralitski.art.api;
 
+import java.awt.Color;
+
 public class Util {
 	
 	public static String combine(String[] sArray, char combine) {
@@ -17,6 +19,13 @@ public class Util {
 			if(index < data.length) data[index++] = combine;
 		}
 		return new String(data);
+	}
+	
+	public static Color getColorWithAlpha(Color color, float alpha) {
+		float cr = (float)color.getRed() / 255F;
+		float cg = (float)color.getGreen() / 255F;
+		float cb = (float)color.getBlue() / 255F;
+		return new Color(cr, cg, cb, alpha);
 	}
 
 }

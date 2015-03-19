@@ -11,8 +11,6 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 public class FrameManager implements WindowListener {
-
-    //TODO: produce the art and stuff
 	
 	private ArtManager manager;
 	

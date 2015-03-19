@@ -8,21 +8,21 @@ import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-public class Extractor {
+public class ExtractorJar implements Runnable {
 	
 	private String jarPath;
 	private String pathInJar;
 	private String codePath;
 	private String fileType;
 	
-	public Extractor(String jarPath, String pathInJar, String codePath, String fileType) {
+	public ExtractorJar(String jarPath, String pathInJar, String codePath, String fileType) {
 		this.jarPath = jarPath;
 		this.pathInJar = pathInJar;
 		this.codePath = codePath;
 		this.fileType = fileType;
 	}
 	
-	public void extractJar() {
+	public void run() {
 		try {
 			extractJar(jarPath, pathInJar, codePath);
 		} catch (IOException e) {
@@ -35,7 +35,7 @@ public class Extractor {
 		Enumeration<JarEntry> entries = file.entries();
 		while(entries.hasMoreElements()) {
 			JarEntry e = entries.nextElement();
-			if(e.getName().startsWith(src) && e.getName().endsWith(fileType)) {
+			if(e.getName().startsWith(src) && (fileType == null || e.getName().endsWith(fileType))) {
 				//extract
 				InputStream in = file.getInputStream(e);
 				File f = new File(dest + "/" + e.getName());

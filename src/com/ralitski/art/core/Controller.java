@@ -1,6 +1,7 @@
 package com.ralitski.art.core;
 
 import java.io.File;
+import java.net.URISyntaxException;
 
 import com.ralitski.art.core.gui.Gui;
 
@@ -22,32 +23,12 @@ public class Controller {
 	private Settings settings;
 	
 	private Gui gui;
-	private Extractor classExtractor;
-	private Extractor scriptExtractor;
+	private Runnable classExtractor;
+	private Runnable scriptExtractor;
 	private ArtClassLoader artLoader;
 	private ScriptLoader scriptLoader;
 	
 	public Controller() {
-		instance = this;
-		this.settings = new Settings();
-		settings.load();
-		
-		String jarPath = settings.get("PATH_JAR", "./art.jar");
-		String codePath = settings.get("PATH_CODE", "./code/");
-		String scriptPath = settings.get("PATH_SCRIPT", "./scripts/");
-		classExtractor = new Extractor(jarPath,
-				settings.get("PATH_CODE_IN_JAR", "com/ralitski/art/artists"),
-				codePath,
-				".class");
-		
-		scriptExtractor = new Extractor(jarPath,
-				settings.get("PATH_SCRIPT_IN_JAR", "com/ralitski/art/scripts"),
-				scriptPath,
-				settings.get("SCRIPT_FILE_TYPE", ".txt"));
-		
-		this.gui = new Gui(this);
-		this.artLoader = new ArtClassLoader(new File(codePath));
-		this.scriptLoader = new ScriptLoader(new File(scriptPath));
 	}
 	
 	public Settings getSettings() {
@@ -58,11 +39,11 @@ public class Controller {
 		return gui;
 	}
 	
-	public Extractor getClassExtractor() {
+	public Runnable getClassExtractor() {
 		return classExtractor;
 	}
 	
-	public Extractor getScriptExtractor() {
+	public Runnable getScriptExtractor() {
 		return scriptExtractor;
 	}
 	
@@ -74,6 +55,43 @@ public class Controller {
 		return scriptLoader;
 	}
 	
+	public void setup() {
+		instance = this;
+		this.settings = new Settings();
+		settings.load();
+
+		settings = settings.getSubSettings("controller");
+		String codePath = settings.get("PATH_CODE", "./code/");
+		String scriptPath = settings.get("PATH_SCRIPT", "./scripts/");
+		String fileTypeScript = settings.get("SCRIPT_FILE_TYPE", ".txt");
+		String mainPath;
+		try {
+			mainPath = Main.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+		} catch (URISyntaxException e) {
+			//asume jar
+			e.printStackTrace();
+			mainPath = "./art.jar";
+		}
+		if(mainPath.endsWith(".jar")) {
+			//jar
+			classExtractor = new ExtractorJar(mainPath,
+					settings.get("PATH_CODE_IN_JAR", "com/ralitski/art/artists"),
+					codePath,
+					".class");
+			scriptExtractor = new ExtractorJar(mainPath,
+					settings.get("PATH_SCRIPT_IN_JAR", "com/ralitski/art/scripts"),
+					scriptPath,
+					fileTypeScript);
+		} else {
+			//probably IDE
+			classExtractor = new ExtractorFile(mainPath, codePath, ".class");
+		}
+		
+		this.gui = new Gui(this);
+		this.artLoader = new ArtClassLoader(new File(codePath));
+		this.scriptLoader = new ScriptLoader(new File(scriptPath));
+	}
+	
 	public void start() {
 		gui.setup();
 		gui.start();
@@ -81,5 +99,11 @@ public class Controller {
 	
 	public void stop() {
 		settings.save();
+	}
+	
+	public void dispatchCommand(String cmd) {
+		if(cmd != null && !cmd.isEmpty()) {
+			gui.log(cmd + "\n");
+		}
 	}
 }
