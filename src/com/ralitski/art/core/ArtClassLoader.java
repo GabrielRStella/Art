@@ -4,10 +4,12 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ArtClassLoader {
 	
@@ -21,6 +23,15 @@ public class ArtClassLoader {
 	
 	public Class<?> getClass(String name) {
 		return classes.get(name);
+	}
+	
+	public Set<String> getClassNames() {
+		return classes.keySet();
+	}
+	
+	//though it is a collection, there will be no duplicates
+	public Collection<Class<?>> getClasses() {
+		return classes.values();
 	}
 	
 	public List<Class<?>> loadClasses() {
@@ -51,6 +62,9 @@ public class ArtClassLoader {
 		return null;
 	}
 	
+	//worker methods
+	
+	//redirect for recursion
 	private List<File> findClasses() {
 		return findClasses(dir);
 	}

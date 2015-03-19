@@ -81,7 +81,7 @@ public class CommandHandler {
 				controller.log(e.getMessage());
 			}
 		} else {
-			controller.log("Command \"" + cmd + "\" not recognized");
+			controller.log("Command \"" + cmd + "\" not recognized, type \"help\" for help");
 		}
 	}
 	

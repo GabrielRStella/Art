@@ -20,7 +20,7 @@ public class ArtManager implements Cloneable {
 	private volatile boolean running;
 	private FrameManager frame;
 	
-	public ArtManager(Controller controller, ArtCreator creator) throws Exception {
+	public ArtManager(Controller controller, ArtCreator creator) {
 		this.controller = controller;
 		this.creator = creator;
 	}
@@ -83,25 +83,17 @@ public class ArtManager implements Cloneable {
     //statik
 	
 	public static void createArt(Controller controller, Class<?> c) {
-		try {
-			ArtCreatorClass creator = new ArtCreatorClass(c);
-			if(creator.getArtist() != null) {
-				ArtManager manager = new ArtManager(controller, creator);
-				createArt(manager);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		ArtCreatorClass creator = new ArtCreatorClass(c);
+		if(creator.getArtist() != null) {
+			ArtManager manager = new ArtManager(controller, creator);
+			createArt(manager);
 		}
 	}
 	
 	public static void createArt(Controller controller, String name, String script) {
 		ArtCreatorScript creator = new ArtCreatorScript(name, script);
-		try {
-			ArtManager manager = new ArtManager(controller, creator);
-			createArt(manager);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		ArtManager manager = new ArtManager(controller, creator);
+		createArt(manager);
 	}
 	
 	public static void createArt(final ArtManager manager) {

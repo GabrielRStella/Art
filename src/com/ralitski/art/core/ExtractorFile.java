@@ -42,6 +42,7 @@ public class ExtractorFile implements Runnable {
 			}
 		} else if(fileType == null || f.getName().endsWith(fileType)) {
 			copyFile(f);
+			Controller.getInstance().log("Extracted file: " + f.getName());
 		}
 	}
 	

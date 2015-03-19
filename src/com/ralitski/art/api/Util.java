@@ -1,6 +1,7 @@
 package com.ralitski.art.api;
 
 import java.awt.Color;
+import java.io.File;
 
 public class Util {
 	
@@ -49,6 +50,18 @@ public class Util {
 		float cg = (float)color.getGreen() / 255F;
 		float cb = (float)color.getBlue() / 255F;
 		return new Color(cr, cg, cb, alpha);
+	}
+	
+	public static boolean delete(File f) {
+		if(f.isDirectory()) {
+			for(File f2 : f.listFiles()) {
+				if(!delete(f2)) return false;
+			}
+			f.delete();
+			return true;
+		} else {
+			return f.delete();
+		}
 	}
 
 }

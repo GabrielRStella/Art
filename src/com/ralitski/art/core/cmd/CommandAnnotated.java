@@ -54,7 +54,9 @@ public class CommandAnnotated implements Command {
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+			Throwable t = e.getCause();
+			if(t != null && t instanceof RuntimeException) throw (RuntimeException)t;
+			else e.printStackTrace();
 		}
 	}
 

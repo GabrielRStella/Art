@@ -1,7 +1,6 @@
 package com.ralitski.art.core;
 
 import java.io.File;
-import java.net.URISyntaxException;
 
 import com.ralitski.art.core.cmd.CommandHandler;
 import com.ralitski.art.core.gui.Gui;
@@ -12,9 +11,25 @@ import com.ralitski.art.core.gui.Gui;
  *
  */
 public class Controller {
+
+	//settings keys
+	public static final String KEY_CODE_PATH_DEST = "codePathDest";
+	public static final String KEY_SCRIPT_PATH_DEST = "scriptPathDest";
+	public static final String KEY_CODE_PATH_SRC = "codePathSrc";
+	public static final String KEY_SCRIPT_PATH_SRC = "scriptPathSrc";
+	public static final String KEY_SCRIPT_FILE_TYPE = "scriptFileType";
+	//settings default values
+	private static final String VALUE_CODE_PATH_DEST = "./code/";
+	private static final String VALUE_SCRIPT_PATH_DEST = "./scripts/";
+	private static final String VALUE_CODE_PATH_SRC = "com/ralitski/art/artists";
+	private static final String VALUE_SCRIPT_PATH_SRC = "com/ralitski/art/scripts";
+	private static final String VALUE_SCRIPT_FILE_TYPE = ".txt";
+	
+	//
 	
 	private static Controller instance;
 	private static final String LOG_PREFIX = ">";
+	private static final String LOG_INDENT = "   ";
 	
 	public static Controller getInstance() {
 		return instance;
@@ -36,6 +51,10 @@ public class Controller {
 	
 	public Settings getSettings() {
 		return settings;
+	}
+	
+	public Settings getSubSettings() {
+		return settings.getSubSettings("controller");
 	}
 	
 	public Gui getGui() {
@@ -63,18 +82,21 @@ public class Controller {
 		this.settings = new Settings();
 		settings.load();
 
-		settings = settings.getSubSettings("controller");
-		String codePath = settings.get("CODE_PATH_DEST", "./code/");
-		String scriptPath = settings.get("SCRIPT_PATH_DEST", "./scripts/");
-		String codePathSrc = settings.get("CODE_PATH_SRC", "com/ralitski/art/artists");
-		String scriptPathSrc = settings.get("SCRIPT_PATH_SRC", "com/ralitski/art/scripts");
-		String fileTypeScript = settings.get("SCRIPT_FILE_TYPE", ".txt");
+		Settings settings = getSubSettings();
+		String codePathDest = settings.get(KEY_CODE_PATH_DEST, VALUE_CODE_PATH_DEST);
+		String scriptPathDest = settings.get(KEY_SCRIPT_PATH_DEST, VALUE_SCRIPT_PATH_DEST);
+		String codePathSrc = settings.get(KEY_CODE_PATH_SRC, VALUE_CODE_PATH_SRC);
+		String scriptPathSrc = settings.get(KEY_SCRIPT_PATH_SRC, VALUE_SCRIPT_PATH_SRC);
+		String fileTypeScript = settings.get(KEY_SCRIPT_FILE_TYPE, VALUE_SCRIPT_FILE_TYPE);
 		String mainPath;
 		//detect jar
 		try {
-			mainPath = Main.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
-		} catch (URISyntaxException e) {
-			//asume jar
+			//this is not working; jar returns null, URI is "rsrc:./" and getPath() returns null
+			mainPath = getClass().getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+			//lame catch
+			if(mainPath == null) mainPath = settings.get("JAR", "./art.jar");
+		} catch (/*URISyntax*/Exception e) {
+			//asume jar; this shouldn't occur
 			e.printStackTrace();
 			mainPath = "./art.jar";
 		}
@@ -83,22 +105,22 @@ public class Controller {
 			//jar
 			classExtractor = new ExtractorJar(mainPath,
 					codePathSrc,
-					codePath,
+					codePathDest,
 					".class");
 			scriptExtractor = new ExtractorJar(mainPath,
 					scriptPathSrc,
-					scriptPath,
+					scriptPathDest,
 					fileTypeScript);
 		} else {
 			//probably IDE
-			classExtractor = new ExtractorFile(mainPath + codePathSrc, codePath, codePathSrc, ".class");
-			scriptExtractor = new ExtractorFile(mainPath + scriptPathSrc, scriptPath, scriptPathSrc, fileTypeScript);
+			classExtractor = new ExtractorFile(mainPath + codePathSrc, codePathDest, codePathSrc, ".class");
+			scriptExtractor = new ExtractorFile(mainPath + scriptPathSrc, scriptPathDest, scriptPathSrc, fileTypeScript);
 		}
 		
 		this.gui = new Gui(this);
 		gui.setup(settings);
-		this.artLoader = new ArtClassLoader(new File(codePath));
-		this.scriptLoader = new ScriptLoader(new File(scriptPath));
+		this.artLoader = new ArtClassLoader(new File(codePathDest));
+		this.scriptLoader = new ScriptLoader(new File(scriptPathDest));
 		
 		this.cmd = new CommandHandler(this);
 		cmd.addCommands(new ConsoleCommands());
@@ -114,12 +136,12 @@ public class Controller {
 	
 	public void dispatchCommand(String cmd) {
 		if(cmd != null && !cmd.isEmpty()) {
-			log(LOG_PREFIX + cmd);
+			gui.log(LOG_PREFIX + cmd + "\n");
 			this.cmd.handle(cmd);
 		}
 	}
 
 	public void log(String s) {
-		gui.log(s + "\n");
+		gui.log(LOG_INDENT + s + "\n");
 	}
 }

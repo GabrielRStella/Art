@@ -50,7 +50,7 @@ public class ExtractorJar implements Runnable {
 				}
 				String name = f.getName();
 				name = name.substring(0, name.lastIndexOf("."));
-				System.out.println("Extracted artist: " + name);
+				Controller.getInstance().log("Extracted file: " + name);
 				in.close();
 				out.close();
 			}
