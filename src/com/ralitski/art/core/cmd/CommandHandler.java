@@ -54,6 +54,7 @@ public class CommandHandler {
 		for(String alias : command.getAliases()) {
 			commands.put(alias, command);
 		}
+		commands.put(command.getName(), command); //the formal name is not part of the aliases array
 		cmdList.add(command);
 	}
 	
@@ -64,9 +65,6 @@ public class CommandHandler {
 			if(mark != null) {
 				Command c = new CommandAnnotated(commandList, m);
 				addCommand(c);
-			} else {
-				//debug testing
-				System.out.println("SKIP " + m);
 			}
 		}
 	}
@@ -77,7 +75,11 @@ public class CommandHandler {
 		String args = parse.length > 1 ? parse[1] : "";
 		Command c = commands.get(alias);
 		if(c != null) {
-			c.execute(alias, args, controller);
+			try {
+				c.execute(alias, args, controller);
+			} catch (Exception e) {
+				controller.log(e.getMessage());
+			}
 		} else {
 			controller.log("Command \"" + cmd + "\" not recognized");
 		}
@@ -114,9 +116,30 @@ public class CommandHandler {
 
 		@Override
 		public void execute(String alias, String args, Controller controller) {
-			controller.log("Command List:");
-			for(String s : getHelpMessage()) {
-				controller.log(s);
+			if(!args.isEmpty()) {
+				if(args.equals("-a")) {
+					//list all data
+					controller.log("Detailed Command List:");
+					for(String s : getHelpMessage()) {
+						controller.log(s);
+					}
+				} else {
+					//data for a specific command
+					Command c = commands.get(args);
+					if(c != null) {
+						for(String s : getHelpMessage(c)) {
+							controller.log(s);
+						}
+					} else {
+						throw new CommandNotFoundException(args);
+					}
+				}
+			} else {
+				//list command names
+				controller.log("Command List:");
+				for(Command c : cmdList) {
+					controller.log(c.getName());
+				}
 			}
 		}
 		
