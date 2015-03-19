@@ -96,10 +96,12 @@ public class Controller {
 		}
 		
 		this.gui = new Gui(this);
+		gui.setup(settings);
 		this.artLoader = new ArtClassLoader(new File(codePath));
 		this.scriptLoader = new ScriptLoader(new File(scriptPath));
+		
 		this.cmd = new CommandHandler(this);
-		gui.setup(settings);
+		cmd.addCommands(new ConsoleCommands());
 	}
 	
 	public void start() {

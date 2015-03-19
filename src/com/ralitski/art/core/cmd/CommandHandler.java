@@ -24,10 +24,10 @@ public class CommandHandler {
 		int index = 0;
 		msg[index++] = name;
 		String usageMsg = "Usage: \"" + name;
-		if(usage != null) usageMsg = usageMsg + " " + usage;
+		if(usage != null && !usage.isEmpty()) usageMsg = usageMsg + " " + usage;
 		msg[index++] = usageMsg + "\"";
 		if(alias != null) {
-			String aliases = "Aliases: " + Util.combine(alias, ", ");
+			String aliases = "Aliases: " + name + ", " + Util.combine(alias, ", ");
 			msg[index++] = aliases;
 		}
 		for(String s : help) {
@@ -62,7 +62,10 @@ public class CommandHandler {
 		for(Method m : commandList.getClass().getDeclaredMethods()) {
 			CommandMark mark = m.getAnnotation(CommandMark.class);
 			if(mark != null) {
-				addCommand(new CommandAnnotated(commandList, m));
+				Command c = new CommandAnnotated(commandList, m);
+				addCommand(c);
+			} else {
+				System.out.println("SKIP " + m);
 			}
 		}
 	}
