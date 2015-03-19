@@ -65,6 +65,7 @@ public class CommandHandler {
 				Command c = new CommandAnnotated(commandList, m);
 				addCommand(c);
 			} else {
+				//debug testing
 				System.out.println("SKIP " + m);
 			}
 		}
