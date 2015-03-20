@@ -42,9 +42,9 @@ public class ArtClassLoader {
 			e1.printStackTrace();
 			return null;
 		}
+		this.classes.clear();
 		List<File> files = findClasses();
 		if(files != null && !files.isEmpty()) {
-			this.classes.clear();
 			System.gc(); //clear old stuff; dunno if necessary
 			List<Class<?>> classes = new LinkedList<Class<?>>();
 			for(File f : files) {

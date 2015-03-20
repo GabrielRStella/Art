@@ -123,7 +123,8 @@ public class Controller {
 		this.scriptLoader = new ScriptLoader(new File(scriptPathDest));
 		
 		this.cmd = new CommandHandler(this);
-		cmd.addCommands(new ConsoleCommands());
+		cmd.addCommands(new CmdConsole());
+		cmd.addCommands(new CmdSettings());
 	}
 	
 	public void start() {
@@ -131,6 +132,9 @@ public class Controller {
 	}
 	
 	public void stop() {
+		if(gui.running()) {
+			gui.stop();
+		}
 		settings.save();
 	}
 	

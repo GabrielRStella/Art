@@ -10,7 +10,12 @@ import com.ralitski.art.api.Util;
 import com.ralitski.art.core.cmd.CommandMark;
 import com.ralitski.art.core.cmd.InvalidArgumentsException;
 
-public class ConsoleCommands {
+/**
+ * The default command set.
+ * 
+ * @author ralitski
+ */
+public class CmdConsole {
 	
 	@CommandMark(name = "extract",
 			aliases = {"e, ex"},
@@ -46,7 +51,7 @@ public class ConsoleCommands {
 	}
 	
 	@CommandMark(name = "load",
-			aliases = {"l, load"},
+			aliases = {"l"},
 			usage = "<code|script>",
 			help = {"Loads classes or scripts from the loading directory."})
 	public void onLoad(String alias, String args, Controller controller) {
@@ -117,7 +122,7 @@ public class ConsoleCommands {
 	}
 	
 	@CommandMark(name = "draw",
-			aliases = {"d, draw"},
+			aliases = {"d"},
 			usage = "[-c -s] <artist name>",
 			help = {"Draws the specified class or script.","The -c flag attaches the default code package prefix.","The -s flag attaches the default script package prefix."})
 	public void onDraw(String alias, String args, Controller controller) {
@@ -145,10 +150,6 @@ public class ConsoleCommands {
 			}
 		}
 	}
-	
-	/*
-		
-	 */
 	
 	@CommandMark(name = "font",
 			aliases = {"f"},
@@ -180,5 +181,12 @@ public class ConsoleCommands {
 			if(s.length % 10 != 0) pages++;
 			controller.log(s.length + " fonts detected (" + pages + " pages).");
 		}
+	}
+	
+	@CommandMark(name = "exit",
+			aliases = {"close"},
+			help = {"Shuts down the program."})
+	public void onExit(String alias, String args, Controller controller) {
+		controller.stop();
 	}
 }

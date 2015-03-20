@@ -31,9 +31,9 @@ public class ScriptLoader {
 	}
 	
 	public List<String> loadScripts() {
+		this.scripts.clear();
 		List<File> files = findScripts();
 		if(files != null && !files.isEmpty()) {
-			this.scripts.clear();
 			List<String> scripts = new LinkedList<>();
 			for(File f : files) {
 				String name = getName(f);
