@@ -1,6 +1,9 @@
 package com.ralitski.art.core;
 
 import java.io.File;
+import java.io.PrintStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 import com.ralitski.art.core.cmd.CommandHandler;
 import com.ralitski.art.core.gui.Gui;
@@ -125,6 +128,31 @@ public class Controller {
 		this.cmd = new CommandHandler(this);
 		cmd.addCommands(new CmdConsole());
 		cmd.addCommand(new CmdSettings(this));
+		hookSys();
+	}
+	
+	private void hookSys() {
+		PrintStream out = new PrintStream(new GuiOutputStream(this), true);
+		replace("out", out);
+		replace("err", out);
+	}
+	
+	private void replace(String name, PrintStream out) {
+		try {
+			Field f = System.class.getDeclaredField(name);
+		    Field modifiersField = Field.class.getDeclaredField("modifiers");
+		    modifiersField.setAccessible(true);
+		    modifiersField.setInt(f, f.getModifiers() & ~Modifier.FINAL);
+			f.set(null, out);
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void start() {
