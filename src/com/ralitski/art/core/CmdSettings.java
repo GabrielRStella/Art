@@ -152,6 +152,7 @@ public class CmdSettings implements Command {
 			help = {"Sets the value associated with the given key"})
 	public void onSave(String alias, String args, Controller controller) {
 		base.save();
+		controller.log("Saved settings.");
 	}
 	
 	@CommandMark(name = "load",
@@ -159,6 +160,7 @@ public class CmdSettings implements Command {
 			help = {"Sets the value associated with the given key"})
 	public void onLoad(String alias, String args, Controller controller) {
 		base.load();
+		controller.log("Loaded settings.");
 	}
 	
 	@CommandMark(name = "current",

@@ -203,7 +203,7 @@ public class Settings {
 	
 	public <T extends Enum<?>> T getEnum(String key, Class<T> eClass) {
 		String s = get(key);
-		T t = valueOf(eClass, s);
+		T t = s == null ? null : valueOf(eClass, s);
 		return t;
 	}
 	
