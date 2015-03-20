@@ -289,6 +289,6 @@ public class Point2d implements Cloneable {
     @Override
     public int hashCode() {
     	//uses the lowest bits of each part
-        return (Float.floatToIntBits(this.getX()) << 16) + (Float.floatToIntBits(this.getY()) & 65535);
+        return (Float.floatToIntBits(this.getX()) << 16) | (Float.floatToIntBits(this.getY()) & 65535);
     }
 }
