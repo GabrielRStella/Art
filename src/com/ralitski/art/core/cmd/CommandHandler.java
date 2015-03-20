@@ -17,16 +17,17 @@ public class CommandHandler {
 	public static String[] getHelpMessage(Command command) {
 		String name = command.getName();
 		String[] alias = command.getAliases();
+		boolean hasAlias = alias != null && alias.length > 0;
 		String[] help = command.getHelp();
 		String usage = command.getUsage();
-		int total = (alias != null ? 1 : 0) + help.length + 2;
+		int total = (hasAlias ? 1 : 0) + help.length + 2;
 		String[] msg = new String[total];
 		int index = 0;
 		msg[index++] = name;
 		String usageMsg = "Usage: \"" + name;
 		if(usage != null && !usage.isEmpty()) usageMsg = usageMsg + " " + usage;
 		msg[index++] = usageMsg + "\"";
-		if(alias != null) {
+		if(hasAlias) {
 			String aliases = "Aliases: " + name + ", " + Util.combine(alias, ", ");
 			msg[index++] = aliases;
 		}
@@ -51,8 +52,10 @@ public class CommandHandler {
 	}
 	
 	public void addCommand(Command command) {
-		for(String alias : command.getAliases()) {
-			commands.put(alias, command);
+		if(command.getAliases() != null) {
+			for(String alias : command.getAliases()) {
+				commands.put(alias, command);
+			}
 		}
 		commands.put(command.getName(), command); //the formal name is not part of the aliases array
 		cmdList.add(command);
@@ -81,8 +84,12 @@ public class CommandHandler {
 				controller.log(e.getMessage());
 			}
 		} else {
-			controller.log("Command \"" + cmd + "\" not recognized, type \"help\" for help");
+			cmdNotFound(cmd);
 		}
+	}
+	
+	protected void cmdNotFound(String cmd) {
+		controller.log("Command \"" + cmd + "\" not recognized, type \"help\" for help");
 	}
 	
 	public Iterable<String> getHelpMessage() {

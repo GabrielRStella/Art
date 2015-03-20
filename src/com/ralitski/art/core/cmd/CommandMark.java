@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface CommandMark {
 	String name();
-	String[] aliases();
+	String[] aliases() default {};
 	String usage() default "";
 	String[] help();
 }

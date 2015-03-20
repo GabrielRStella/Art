@@ -124,7 +124,7 @@ public class Controller {
 		
 		this.cmd = new CommandHandler(this);
 		cmd.addCommands(new CmdConsole());
-		cmd.addCommands(new CmdSettings());
+		cmd.addCommand(new CmdSettings(this));
 	}
 	
 	public void start() {

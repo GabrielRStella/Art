@@ -9,11 +9,14 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.text.CollationKey;
 import java.text.Collator;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.TreeMap;
 
 public class Settings {
@@ -25,18 +28,31 @@ public class Settings {
 	private Map<String, Setting> values;
 	
 	public Settings() {
-		values = new HashMap<>();
+		values = Collections.synchronizedMap(new HashMap<String, Setting>());
 	}
 	
 	public Settings getSubSettings(String path) {
 		return new SubSettings(this, path);
 	}
 	
-	public List<String> getComments(String key) {
-		synchronized(values) {
-			Setting s = values.get(key);
-			return s != null ? s.comments : null;
+	public Set<String> getKeys() {
+		return values.keySet();
+	}
+	
+	//detects SubSettings sections
+	public Set<String> getSections() {
+		Set<String> ret = new HashSet<>();
+		for(String s : getKeys()) {
+			if(s.contains(".")) {
+				ret.add(s.split("\\.")[0]);
+			}
 		}
+		return ret;
+	}
+	
+	public List<String> getComments(String key) {
+		Setting s = values.get(key);
+		return s != null ? s.comments : null;
 	}
 	
 	/**
@@ -47,14 +63,10 @@ public class Settings {
 	 */
 	public boolean addComment(String key, String comment) {
 		Setting s;
-		synchronized(values) {
-			s = values.get(key);
-		}
+		s = values.get(key);
 		if(s != null) {
-			synchronized(s.comments) {
-				List<String> c = s.comments;
-				if(!c.contains(comment)) c.add(comment);
-			}
+			List<String> c = s.comments;
+			if(!c.contains(comment)) c.add(comment);
 			return true;
 		}
 		return false;
@@ -62,46 +74,40 @@ public class Settings {
 	
 	public void removeComments(String key) {
 		Setting s;
-		synchronized(values) {
-			s = values.get(key);
-		}
+		s = values.get(key);
 		if(s != null) {
-			synchronized(s.comments) {
-				s.comments.clear();
-			}
+			s.comments.clear();
 		}
+	}
+	
+	public boolean hasSetting(String key) {
+		return values.containsKey(key);
 	}
 	
 	public String get(String key) {
-		synchronized(values) {
-			Setting s = values.get(key);
-			return s != null ? s.value : null;
-		}
+		Setting s = values.get(key);
+		return s != null ? s.value : null;
 	}
 	
 	public String get(String key, String defaultValue) {
-		synchronized(values) {
-			Setting s = values.get(key);
-			String value;
-			if(s == null) {
-				s = new Setting();
-				s.value = value = defaultValue;
-				values.put(key, s);
-			} else {
-				value = s.value;
-			}
-			return value;
+		Setting s = values.get(key);
+		String value;
+		if(s == null) {
+			s = new Setting();
+			s.value = value = defaultValue;
+			values.put(key, s);
+		} else {
+			value = s.value;
 		}
+		return value;
 	}
 	
 	public String set(String key, String value) {
-		synchronized(values) {
-			Setting s = values.get(key);
-			if(s == null) values.put(key, s = new Setting());
-			String prev = s.value;
-			s.value = value;
-			return prev;
-		}
+		Setting s = values.get(key);
+		if(s == null) values.put(key, s = new Setting());
+		String prev = s.value;
+		s.value = value;
+		return prev;
 	}
 	
 	public int getInt(String key) {
@@ -239,10 +245,8 @@ public class Settings {
 		//alphabetical sort
 		Collator c = Collator.getInstance();
 		Map<CollationKey, Setting> sortMap = new TreeMap<>();
-		synchronized(values) {
-			for(Entry<String, Setting> e : values.entrySet()) {
-				sortMap.put(c.getCollationKey(e.getKey()), e.getValue());
-			}
+		for(Entry<String, Setting> e : values.entrySet()) {
+			sortMap.put(c.getCollationKey(e.getKey()), e.getValue());
 		}
 		
 		BufferedWriter writer = new BufferedWriter(new FileWriter(f));
@@ -277,22 +281,21 @@ public class Settings {
 			f.createNewFile();
 			return;
 		}
+		values.clear(); //get rid of old values
 		BufferedReader reader = new BufferedReader(new FileReader(f));
 		String line;
-		synchronized(values) {
-			Setting current = new Setting();
-			while((line = reader.readLine()) != null) {
-				if(line.startsWith(COMMENT)) {
-					current.comments.add(line.substring(COMMENT.length()));
-				} else {
-					String[] data = line.split(SEPARATOR, 2);
-					if(data.length == 2) {
-						String key = data[0];
-						String value = data[1];
-						current.value = value;
-						values.put(key, current);
-						current = new Setting();
-					}
+		Setting current = new Setting();
+		while((line = reader.readLine()) != null) {
+			if(line.startsWith(COMMENT)) {
+				current.comments.add(line.substring(COMMENT.length()));
+			} else {
+				String[] data = line.split(SEPARATOR, 2);
+				if(data.length == 2) {
+					String key = data[0];
+					String value = data[1];
+					current.value = value;
+					values.put(key, current);
+					current = new Setting();
 				}
 			}
 		}
@@ -315,6 +318,6 @@ public class Settings {
     
     private class Setting {
     	private String value;
-    	private List<String> comments = new LinkedList<>();
+    	private List<String> comments = Collections.synchronizedList(new LinkedList<String>());
     }
 }

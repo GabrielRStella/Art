@@ -21,6 +21,7 @@ public class CommandAnnotated implements Command {
 		CommandMark mark = m.getAnnotation(CommandMark.class);
 		this.name = mark.name();
 		this.aliases = mark.aliases();
+		if(aliases.length == 0) aliases = null; //get rid of empty aliases array
 		this.usage = mark.usage();
 		this.help = mark.help();
 	}

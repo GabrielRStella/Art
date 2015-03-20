@@ -2,7 +2,10 @@ package com.ralitski.art.core;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 public class SubSettings extends Settings {
 	
@@ -15,7 +18,33 @@ public class SubSettings extends Settings {
 		this.path = path;
 	}
 	
-	private String getPath(String key) {
+	public Settings getParent() {
+		return parent;
+	}
+	
+	public Set<String> getKeys() {
+		Set<String> keys = parent.getKeys();
+		Set<String> realKeys = new HashSet<>();
+		Iterator<String> iter = keys.iterator();
+		String path = this.getTotalPath();
+		while(iter.hasNext()) {
+			String s = iter.next();
+			if(s.startsWith(path)) {
+				String s2 = s.substring(path.length());
+				realKeys.add(s2);
+			}
+		}
+		return realKeys;
+	}
+	
+	public String getTotalPath() {
+		if(parent instanceof SubSettings) {
+			return ((SubSettings)parent).path + path;
+		}
+		return path;
+	}
+	
+	public String getPath(String key) {
 		return path + key;
 	}
 	
@@ -35,6 +64,10 @@ public class SubSettings extends Settings {
 	
 	public void removeComments(String key) {
 		parent.removeComments(getPath(key));
+	}
+	
+	public boolean hasSetting(String key) {
+		return parent.hasSetting(getPath(key));
 	}
 	
 	public String get(String key) {
