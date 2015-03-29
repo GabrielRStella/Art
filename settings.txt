@@ -7,6 +7,7 @@ controller.scriptPathDest: ./scripts/
 controller.scriptPathSrc: com/ralitski/art/scripts
 HackathonLogo.bannerLength: -30
 HackathonLogo.colorBackground: ffffff
+HackathonLogo.colorFont: 0
 HackathonLogo.colorPrimary: dd0000
 HackathonLogo.colorSecondary: 990000
 HackathonLogo.colorStripe: ffffff
@@ -27,3 +28,4 @@ HackathonLogo.text_BannerSpaceY: 50
 HackathonLogo.text_StartX: 30
 HackathonLogo.text_StartY: 120
 HackathonLogo.text_WordSpace: 15
+PACKAGE_CODE: com.ralitski.art.artists.
