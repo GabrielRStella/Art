@@ -1,7 +1,9 @@
 #project-specific
 .settings/
+art/
 bin/
 code/
+scripts/
 
 # Windows image file caches
 Thumbs.db
