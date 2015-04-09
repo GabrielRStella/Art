@@ -1,7 +1,5 @@
 package com.ralitski.art.api;
 
-import com.ralitski.art.core.script.StringOutputStream;
-
 public enum Distance {
 	EUCLIDEAN {
 		@Override
@@ -72,19 +70,11 @@ public enum Distance {
 	public static String types() {
 		Distance[] values = values();
 		String[] strings = new String[values.length];
-		int len = -1;
 		for(int i = 0; i < strings.length; i++) {
 			Distance d = values[i];
 			String s = d.name();
 			strings[i] = s;
-			len += s.length();
 		}
-		len += strings.length;
-		StringOutputStream out = new StringOutputStream(len);
-		for(String s : strings) {
-			out.write(s);
-			if(out.capacity() > 0) out.write(" ");
-		}
-		return out.toString();
+		return Util.combine(strings, ' ');
 	}
 }
