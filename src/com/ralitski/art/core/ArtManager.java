@@ -90,12 +90,6 @@ public class ArtManager implements Cloneable {
 		}
 	}
 	
-	public static void createArt(Controller controller, String name, String script) {
-		ArtCreatorScript creator = new ArtCreatorScript(name, script);
-		ArtManager manager = new ArtManager(controller, creator);
-		createArt(manager);
-	}
-	
 	public static void createArt(final ArtManager manager) {
 		System.out.println("Loading art: " + manager.getName());
 		manager.setup();
