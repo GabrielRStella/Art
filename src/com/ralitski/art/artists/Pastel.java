@@ -14,21 +14,23 @@ public class Pastel implements PixelArtist {
 	
 	private int color;
 	
-	public Pastel() {}
+	public Pastel() {
+		color = getColorInt(generateColor());
+	}
 
 	@Override
 	public int getWidth(Settings settings) {
-		return settings.getInt("width", 50);
+		return settings.getInt("width", 200);
 	}
 
 	@Override
 	public int getHeight(Settings settings) {
-		return settings.getInt("height", 50);
+		return settings.getInt("height", 200);
 	}
 
 	@Override
 	public int getColor(int x, int y, Settings settings) {
-	return color;
+		return color;
 	}
 	
 	private static Color generateColor() {

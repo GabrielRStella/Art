@@ -140,15 +140,16 @@ public class CmdConsole {
 			} else {
 				controller.log("The specified class \"" + args + "\" was detected, but is not an artist.");
 			}
-		} else {
-			String s = controller.getScriptLoader().getScript(args);
-			if(s != null) {
-				controller.log("Drawing art: " + args);
-				ArtManager.createArt(controller, args, s);
-			} else {
-				controller.log("The specified class \"" + args + "\" was not detected.");
-			}
 		}
+//		else {
+//			String s = controller.getScriptLoader().getScript(args);
+//			if(s != null) {
+//				controller.log("Drawing art: " + args);
+//				ArtManager.createArt(controller, args, s);
+//			} else {
+//				controller.log("The specified script \"" + args + "\" was not detected.");
+//			}
+//		}
 	}
 	
 	@CommandMark(name = "font",
