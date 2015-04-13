@@ -6,6 +6,10 @@ import java.util.Random;
 import com.ralitski.art.api.PixelArtist;
 import com.ralitski.art.core.Settings;
 
+/*
+ * Pastel colors separated by 20-30 between parts
+ * Fruity colors separated by 50-70
+ */
 public class Pastel implements PixelArtist {
 	
 	private int color;
