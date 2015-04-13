@@ -39,7 +39,7 @@ public class Pastel implements PixelArtist {
 		int sub = random.nextInt(2);
 		
 		int c1 = 220 + random.nextInt(36); //220-255
-		int c2 = 190 + random.nextInt(66); //190-255
+		int c2 = 190 + random.nextInt(46); //190-235
 		int c3 = 170 + random.nextInt(46); //170-215
 		
 		int r, g, b;
