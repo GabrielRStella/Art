@@ -6,6 +6,8 @@ controller.JAR: ./art.jar
 controller.scriptFileType: .txt
 controller.scriptPathDest: ./scripts/
 controller.scriptPathSrc: com/ralitski/art/scripts
+Fruity.height: 200
+Fruity.width: 200
 HackathonLogo.bannerLength: 0
 HackathonLogo.colorBackground: ffffff
 HackathonLogo.colorFont: 000000
