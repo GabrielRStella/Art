@@ -1,5 +1,8 @@
 package com.ralitski.art.core;
 
+import java.awt.Frame;
+import java.awt.Rectangle;
+
 import com.ralitski.art.core.cmd.CommandMark;
 import com.ralitski.art.core.gui.Gui;
 
@@ -29,25 +32,28 @@ public class CmdGui {
 	}
 	
 	private void open(Controller controller) {
-		Gui g = new Gui(controller);
-		Thread t = new Thread(new GuiRunnable(g));
+		Thread t = new Thread(new GuiRunnable(controller));
 		t.setDaemon(true);
 		t.start();
-		controller.addTask(g);
 	}
 	
 	private class GuiRunnable implements Runnable {
 		
-		private Gui gui;
+		private Controller controller;
 		
-		GuiRunnable(Gui gui) {
-			this.gui = gui;
+		GuiRunnable(Controller controller) {
+			this.controller = controller;
 		}
 
 		@Override
 		public void run() {
-			gui.setup();
-			gui.start();
+			Gui g = new Gui(controller);
+			g.setup();
+			Frame f = controller.getGui().getFrame().getFrame();
+			Rectangle r = f.getBounds();
+			g.getFrame().getFrame().setLocation((int)r.getMaxX() + 10, (int)r.getMinY());
+			controller.addTask(g);
+			g.start();
 		}
 		
 	}

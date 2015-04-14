@@ -21,7 +21,7 @@ public class GuiFrame implements WindowListener {
 		this.task = task;
 	}
 	
-	Frame getFrame() {
+	public Frame getFrame() {
 		return frame;
 	}
 	
@@ -50,11 +50,11 @@ public class GuiFrame implements WindowListener {
 	
 	public void stop() {
 		if(running) {
-			frame.dispose();
 			running = false;
 			if(task.running()) {
 				task.stop();
 			}
+			frame.dispose();
 		}
 	}
 	

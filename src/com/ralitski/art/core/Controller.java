@@ -166,6 +166,7 @@ public class Controller {
 	
 	public void start() {
 		gui.log("Type \"help\" to list available commands.\n");
+		dispatchCommand("gui");
 		gui.start();
 	}
 	

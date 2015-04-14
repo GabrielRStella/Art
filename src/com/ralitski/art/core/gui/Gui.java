@@ -34,6 +34,10 @@ public class Gui implements Task {
 	public int getHeight() {
 		return getWidth();
 	}
+	
+	public GuiFrame getFrame() {
+		return frame;
+	}
 
 	public boolean running() {
 		return running;
