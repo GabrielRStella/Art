@@ -6,17 +6,19 @@ import java.awt.event.WindowListener;
 
 import javax.swing.BoxLayout;
 
+import com.ralitski.art.core.Task;
+
 public class GuiFrame implements WindowListener {
 
     //TODO: produce the art and stuff
 	
-	private Gui gui;
+	private Task task;
 	
 	private Frame frame;
 	private volatile boolean running;
 	
-	public GuiFrame(Gui gui) {
-		this.gui = gui;
+	public GuiFrame(Task task) {
+		this.task = task;
 	}
 	
 	Frame getFrame() {
@@ -44,15 +46,14 @@ public class GuiFrame implements WindowListener {
         frame.addWindowListener(this);
 
         running = true;
-        System.out.println("Window created!");
 	}
 	
 	public void stop() {
 		if(running) {
 			frame.dispose();
 			running = false;
-			if(gui.running()) {
-				gui.stop();
+			if(task.running()) {
+				task.stop();
 			}
 		}
 	}

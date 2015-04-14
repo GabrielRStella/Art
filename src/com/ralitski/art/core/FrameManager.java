@@ -46,7 +46,6 @@ public class FrameManager implements WindowListener {
         frame.addWindowListener(this);
 
         running = true;
-        System.out.println("Window created!");
 	}
 	
 	public void stop() {
@@ -111,12 +110,6 @@ public class FrameManager implements WindowListener {
     	public CanvasManager(Image i) {
     		image = i;
     	}
-
-        @Override
-        public final void removeNotify() {
-            System.out.println("Window destroyed");
-            super.removeNotify();
-        }
 
         @Override
         public void paint(Graphics g) {

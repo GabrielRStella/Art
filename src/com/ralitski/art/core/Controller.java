@@ -4,9 +4,12 @@ import java.io.File;
 import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import com.ralitski.art.core.cmd.CommandHandler;
-import com.ralitski.art.core.gui.Gui;
+import com.ralitski.art.core.gui.GuiConsole;
 
 /**
  * the main class of the program (that is actually instantiated).
@@ -42,12 +45,13 @@ public class Controller {
 	
 	private Settings settings;
 	
-	private Gui gui;
+	private GuiConsole gui;
 	private Runnable classExtractor;
 	private Runnable scriptExtractor;
 	private ArtClassLoader artLoader;
 	private ScriptLoader scriptLoader;
 	private CommandHandler cmd;
+	private List<Task> shutdownHooks = Collections.synchronizedList(new ArrayList<Task>());
 	
 	public Controller() {
 	}
@@ -60,7 +64,7 @@ public class Controller {
 		return settings.getSubSettings("controller");
 	}
 	
-	public Gui getGui() {
+	public GuiConsole getGui() {
 		return gui;
 	}
 	
@@ -78,6 +82,10 @@ public class Controller {
 	
 	public ScriptLoader getScriptLoader() {
 		return scriptLoader;
+	}
+	
+	public void addTask(Task task) {
+		shutdownHooks.add(task);
 	}
 	
 	public void setup() {
@@ -120,7 +128,7 @@ public class Controller {
 			scriptExtractor = new ExtractorFile(mainPath + scriptPathSrc, scriptPathDest, scriptPathSrc, fileTypeScript);
 		}
 		
-		this.gui = new Gui(this);
+		this.gui = new GuiConsole(this);
 		gui.setup(settings);
 		this.artLoader = new ArtClassLoader(new File(codePathDest));
 		this.scriptLoader = new ScriptLoader(new File(scriptPathDest));
@@ -128,6 +136,7 @@ public class Controller {
 		this.cmd = new CommandHandler(this);
 		cmd.addCommands(new CmdConsole());
 		cmd.addCommand(new CmdSettings(this));
+		cmd.addCommands(new CmdGui());
 		hookSys();
 	}
 	
@@ -165,6 +174,9 @@ public class Controller {
 			gui.stop();
 		}
 		settings.save();
+		for(Task t : shutdownHooks) {
+			t.stop();
+		}
 	}
 	
 	public void dispatchCommand(String cmd) {
