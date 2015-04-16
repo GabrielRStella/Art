@@ -4,7 +4,6 @@ art/
 bin/
 code/
 scripts/
-src/
 
 # Windows image file caches
 Thumbs.db
