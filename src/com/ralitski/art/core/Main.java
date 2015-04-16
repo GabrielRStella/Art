@@ -6,10 +6,9 @@ public class Main {
 	 * TODO:
 	 * -add scripting
 	 * -clean up voronoi
-	 * -add log + console to gui, use gui commands instead of buttons
-	 * -add settings to gui
-	 * -detect IDE setup (no jar) and change files layout
-	 * -add PrintStream wrapped around console log to output errors and whatnot
+	 * -add better settings to gui
+	 * -find way to detect jar name...nothing works ;-;
+	 * -event hooks (PRE and POST command dispatch)
 	 */
 	
 	public static void main(String[] args) {
