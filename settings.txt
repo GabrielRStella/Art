@@ -2,6 +2,7 @@ controller.codePathDest: ./code/
 controller.codePathSrc: com/ralitski/art/artists
 controller.guiHeight: 20
 controller.guiWidth: 80
+controller.JAR: ./art.jar
 controller.scriptFileType: .txt
 controller.scriptPathDest: ./scripts/
 controller.scriptPathSrc: com/ralitski/art/scripts
@@ -35,3 +36,17 @@ HackathonLogo.text_StartY: 120
 HackathonLogo.text_WordSpace: 15
 Pastel.height: 200
 Pastel.width: 200
+Voronoi.COLOR: 550
+Voronoi.COLOR_MIN: 80
+Voronoi.height: 500
+#Metrics: EUCLIDEAN NOT_EUCLIDEAN SQUARED ROOT TAXICAB INFINITE NEAREST ORIGINAL WONKY
+Voronoi.METRIC: WONKY
+Voronoi.NODES_MIN: 7
+Voronoi.NODES_RAND: 5
+Voronoi.width: 500
+VoronoiSmoothLoop.height: 1000
+VoronoiSmoothLoop.METRIC: SQUARED
+VoronoiSmoothLoop.NODES_MIN: 10
+VoronoiSmoothLoop.NODES_RAND: 21
+VoronoiSmoothLoop.scale: 4
+VoronoiSmoothLoop.width: 500

@@ -11,8 +11,11 @@ import java.util.Collections;
 import com.ralitski.art.core.ArtCreatorClass;
 import com.ralitski.art.core.Controller;
 import com.ralitski.art.core.Task;
+import com.ralitski.art.core.event.EventHandler;
+import com.ralitski.art.core.event.Listener;
+import com.ralitski.art.core.events.EventShutdown;
 
-public class GuiCode implements Task {
+public class GuiCode implements Task, Listener {
 	
 	private volatile boolean running;
 	private GuiFrame frame;
@@ -62,6 +65,8 @@ public class GuiCode implements Task {
 
 	@Override
 	public void setup() {
+		controller.getEventSystem().addHandler(this);
+		
 		frame = new GuiFrame(this);
 		frame.setup();
 		
@@ -97,6 +102,16 @@ public class GuiCode implements Task {
 			String s = e.getActionCommand();
 			controller.dispatchCommand("draw " + s);
 		}
+	}
+
+	@Override
+	public boolean isActive() {
+		return running;
+	}
+	
+	@EventHandler(EventShutdown.class)
+	public void onShutdown() {
+		stop();
 	}
 
 }

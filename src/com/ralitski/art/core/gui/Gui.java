@@ -11,11 +11,15 @@ import javax.swing.BoxLayout;
 
 import com.ralitski.art.core.Controller;
 import com.ralitski.art.core.Task;
+import com.ralitski.art.core.event.EventHandler;
+import com.ralitski.art.core.event.Listener;
+import com.ralitski.art.core.events.EventCommand;
+import com.ralitski.art.core.events.EventShutdown;
 
 /**
  * add separate windows for loaded classes and scripts (which hook onto controller and refresh when new stuff is loaded)
  */
-public class Gui implements Task {
+public class Gui implements Task, Listener {
 	
 	private volatile boolean running;
 	private GuiFrame frame;
@@ -48,6 +52,9 @@ public class Gui implements Task {
 	}
 	
 	public void setup() {
+		
+		controller.getEventSystem().addHandler(this);
+		
 		frame = new GuiFrame(this);
 		frame.setup();
 		
@@ -99,7 +106,6 @@ public class Gui implements Task {
 			frame.stop();
 			running = false;
 			frame = null;
-//			controller.stop();
 		}
 	}
 	
@@ -117,4 +123,25 @@ public class Gui implements Task {
 		}
 	}
 
+	@Override
+	public boolean isActive() {
+		return running;
+	}
+	
+	@EventHandler(EventShutdown.class)
+	public void onShutdown() {
+		stop();
+	}
+	
+	@EventHandler(EventCommand.class)
+	public void onCommand(EventCommand command) {
+		if(!command.isPreExecution()) {
+			if(command.getCommand().equals("load code")) {
+				controller.dispatchCommand("gui code");
+			} else if(command.getCommand().equals("load script")) {
+				controller.dispatchCommand("gui script");
+			}
+		}
+	}
+	
 }

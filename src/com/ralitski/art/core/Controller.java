@@ -9,6 +9,9 @@ import java.util.Collections;
 import java.util.List;
 
 import com.ralitski.art.core.cmd.CommandHandler;
+import com.ralitski.art.core.event.EventSystem;
+import com.ralitski.art.core.events.EventCommand;
+import com.ralitski.art.core.events.EventShutdown;
 import com.ralitski.art.core.gui.GuiConsole;
 
 /**
@@ -51,7 +54,7 @@ public class Controller {
 	private ArtClassLoader artLoader;
 	private ScriptLoader scriptLoader;
 	private CommandHandler cmd;
-	private List<Task> shutdownHooks = Collections.synchronizedList(new ArrayList<Task>());
+	private EventSystem events;
 	
 	public Controller() {
 	}
@@ -84,8 +87,8 @@ public class Controller {
 		return scriptLoader;
 	}
 	
-	public void addTask(Task task) {
-		shutdownHooks.add(task);
+	public EventSystem getEventSystem() {
+		return events;
 	}
 	
 	public void setup() {
@@ -138,6 +141,7 @@ public class Controller {
 		cmd.addCommand(new CmdSettings(this));
 		cmd.addCommands(new CmdGui());
 		hookSys();
+		events = new EventSystem();
 	}
 	
 	private void hookSys() {
@@ -175,15 +179,15 @@ public class Controller {
 			gui.stop();
 		}
 		settings.save();
-		for(Task t : shutdownHooks) {
-			t.stop();
-		}
+		events.callEvent(new EventShutdown());
 	}
 	
 	public void dispatchCommand(String cmd) {
 		if(cmd != null && !cmd.isEmpty()) {
 			gui.log(LOG_PREFIX + cmd + "\n");
+			events.callEvent(new EventCommand(cmd, true));
 			this.cmd.handle(cmd);
+			events.callEvent(new EventCommand(cmd, false));
 		}
 	}
 

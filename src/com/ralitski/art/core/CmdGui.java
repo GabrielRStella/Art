@@ -58,7 +58,6 @@ public class CmdGui {
 			Frame f = controller.getGui().getFrame().getFrame();
 			Rectangle r = f.getBounds();
 			g.getFrame().getFrame().setLocation((int)r.getMaxX() + 10, (int)r.getMinY());
-			controller.addTask(g);
 			g.start();
 		}
 		
@@ -79,7 +78,6 @@ public class CmdGui {
 			Frame f = controller.getGui().getFrame().getFrame();
 			Rectangle r = f.getBounds();
 			g.getFrame().getFrame().setLocation((int)r.getMaxX() + 10, (int)r.getMinY());
-			controller.addTask(g);
 			g.start();
 		}
 		
@@ -100,7 +98,6 @@ public class CmdGui {
 			Frame f = controller.getGui().getFrame().getFrame();
 			Rectangle r = f.getBounds();
 			g.getFrame().getFrame().setLocation((int)r.getMaxX() + 10, (int)r.getMinY());
-			controller.addTask(g);
 			g.start();
 		}
 		
