@@ -15,6 +15,7 @@ import com.ralitski.art.core.Settings;
 public class VoronoiSmoothLoop implements Artist {
 
 	@Override
+	public ArtCanvas draw(Settings settings) {
 		int w =  settings.getInt("width", 500);
 		int h = settings.getInt("height", 500);
 		ArtCanvas canvas = new ArtCanvas(w, h);
