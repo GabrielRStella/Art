@@ -15,17 +15,9 @@ import com.ralitski.art.core.Settings;
 public class VoronoiSmoothLoop implements Artist {
 
 	@Override
-	public int getWidth(Settings settings) {
-		return settings.getInt("width", 500);
-	}
-
-	@Override
-	public int getHeight(Settings settings) {
-		return settings.getInt("height", 500);
-	}
-
-	@Override
-	public void draw(ArtCanvas canvas, Settings settings) {
+		int w =  settings.getInt("width", 500);
+		int h = settings.getInt("height", 500);
+		ArtCanvas canvas = new ArtCanvas(w, h);
 		int NODES = settings.getInt("NODES_MIN", 10);
 		int R_NODES = settings.getInt("NODES_RAND", 16);
 		Distance d = settings.getEnum("METRIC", Distance.EUCLIDEAN, Distance.class);
@@ -34,8 +26,6 @@ public class VoronoiSmoothLoop implements Artist {
 		
 		Random random = new Random();
 		List<Node> nodes = new LinkedList<>();
-		float w = getWidth(settings);
-		float h = getHeight(settings);
 		for(int i = 0; i < NODES + random.nextInt(R_NODES); i++) {
 			Node n = new Node(random.nextFloat() * w, random.nextFloat() * h, random);
 			nodes.add(n);
@@ -81,6 +71,7 @@ public class VoronoiSmoothLoop implements Artist {
 				canvas.setColor(x, y, new Color(r, g, b));
 			}
 		}
+		return canvas;
 	}
 	
 	private float getDist(Point2d p, Point2d p2, Distance d, float w, float h) {

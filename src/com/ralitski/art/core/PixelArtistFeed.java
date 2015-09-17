@@ -13,23 +13,17 @@ public class PixelArtistFeed implements Artist {
 	}
 
 	@Override
-	public int getWidth(Settings settings) {
-		return internal.getWidth(settings);
-	}
-
-	@Override
-	public int getHeight(Settings settings) {
-		return internal.getHeight(settings);
-	}
-
-	@Override
-	public void draw(ArtCanvas canvas, Settings settings) {
-		for(int x = 0; x < getWidth(settings); x++) {
-			for(int y = 0; y < getHeight(settings); y++) {
+	public ArtCanvas draw(Settings settings) {
+		int w = internal.getWidth(settings);
+		int h = internal.getHeight(settings);
+		ArtCanvas canvas = new ArtCanvas(w, h);
+		for(int x = 0; x < w; x++) {
+			for(int y = 0; y < h; y++) {
 				int c = internal.getColor(x, y, settings);
 				canvas.setColor(x, y, c);
 			}
 		}
+		return canvas;
 	}
 
 }

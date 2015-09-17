@@ -7,17 +7,11 @@ import com.ralitski.art.core.Settings;
 public class JarOSLogo implements Artist {
 
 	@Override
-	public int getWidth(Settings settings) {
-		return settings.getInt("img_width", 100);
-	}
-
-	@Override
-	public int getHeight(Settings settings) {
-		return settings.getInt("img_height", 100);
-	}
-
-	@Override
-	public void draw(ArtCanvas canvas, Settings settings) {
+	public ArtCanvas draw(Settings settings) {
+		int w = settings.getInt("img_width", 100);
+		int h = settings.getInt("img_height", 100);
+		ArtCanvas canvas = new ArtCanvas(w, h);
+		return canvas;
 	}
 
 }

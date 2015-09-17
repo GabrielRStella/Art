@@ -33,8 +33,7 @@ public class ArtCreatorClass implements ArtCreator {
 	@Override
 	public BufferedImage drawImage(Settings s) {
 		if(artist == null) throw new IllegalStateException("Art requires an Artist");
-		ArtCanvas canvas = new ArtCanvas(artist, s);
-		artist.draw(canvas, s);
+		ArtCanvas canvas = artist.draw(s);
 		return canvas.getImage();
 	}
 	

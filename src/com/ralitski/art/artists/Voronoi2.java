@@ -18,17 +18,10 @@ import com.ralitski.art.core.Settings;
 public class Voronoi2 implements Artist {
 
 	@Override
-	public int getWidth(Settings settings) {
-		return settings.getInt("width", 500);
-	}
-
-	@Override
-	public int getHeight(Settings settings) {
-		return settings.getInt("height", 500);
-	}
-
-	@Override
-	public void draw(ArtCanvas canvas, Settings settings) {
+	public ArtCanvas draw(Settings settings) {
+		int w =  settings.getInt("width", 500);
+		int h = settings.getInt("height", 500);
+		ArtCanvas canvas = new ArtCanvas(w, h);
 		int NODES = settings.getInt("NODES_MIN", 10);
 		int R_NODES = settings.getInt("NODES_RAND", 16);
 		int COLOR = settings.getInt("COLOR", 700);
@@ -38,8 +31,6 @@ public class Voronoi2 implements Artist {
 		Random random = new Random();
 		List<Node> nodes = new LinkedList<>();
 		Map<Node, List<Point2d>> sections = new HashMap<>();
-		float w = getWidth(settings);
-		float h = getHeight(settings);
 		for(int i = 0; i < NODES + random.nextInt(R_NODES); i++) {
 			Node n = new Node(random.nextFloat() * w, random.nextFloat() * h);
 			n.setColor(random, COLOR, MIN_COLOR);
@@ -76,6 +67,7 @@ public class Voronoi2 implements Artist {
 				canvas.setColor(x, y, c);
 			}
 		}
+		return canvas;
 	}
 	
 	private class Node extends Point2d {

@@ -4,20 +4,18 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
-import com.ralitski.art.core.Settings;
-
 public class ArtCanvas {
 	
 	private BufferedImage image;
-	
-	public ArtCanvas(Artist a, Settings s) {
-		this(a.getWidth(s), a.getHeight(s));
-	}
 	
 	public ArtCanvas(int width, int height) {
 		image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 	}
 	
+	public ArtCanvas(BufferedImage image) {
+		this.image = image;
+	}
+
 	public BufferedImage getImage() {
 		return image;
 	}

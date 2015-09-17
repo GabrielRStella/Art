@@ -33,6 +33,7 @@ public class FrameManager implements WindowListener {
         Insets insets = frame.getInsets();
         //adjustment constant, idk why it's necessary (but it is)
         int cons = 2;
+//        System.out.println("left: " + insets.left + " right: " + insets.right + " top: " + insets.top + " bottom: " + insets.bottom);
         int width = w + insets.left - cons;
         int height = h + insets.top - cons;
         frame.setSize(width, height);
